@@ -1,6 +1,7 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { verifySessionCookie } from '$lib/firebase/server';
+import { getUser } from '$lib/firebase/server';
 
 /**
  * セッションクッキーの検証
@@ -10,7 +11,13 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 	if (session) {
 		try {
 			const decoded = await verifySessionCookie(session);
-			event.locals.uid = decoded.uid;
+			const userRecord = await getUser(decoded.uid); // TODO: Use our very own user backend instead
+
+			event.locals.currentUser = {
+				uid: userRecord.uid,
+				displayName: userRecord.displayName || '',
+				email: userRecord.email || undefined
+			};
 		} catch {
 			// ignore
 		}
@@ -20,14 +27,16 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 
 /**
  * 認証ガード
+ *
+ * 未認証ユーザなどを、リダイレクトしてしまいたいときに使う。
  */
 const authGuard: Handle = async ({ event, resolve }) => {
-	const uid = event.locals.uid;
+	const currentUser = event.locals.currentUser;
 
-	if (!uid && event.url.pathname.startsWith('/private')) {
+	if (!currentUser && event.url.pathname.startsWith('/private')) {
 		return redirect(303, '/login?next=' + encodeURIComponent(event.url.pathname));
 	}
-	if (uid && event.url.pathname === '/login') {
+	if (currentUser && event.url.pathname === '/login') {
 		const next = event.url.searchParams.get('next');
 		const url = next ? decodeURIComponent(next) : '/private';
 		return redirect(303, url);
