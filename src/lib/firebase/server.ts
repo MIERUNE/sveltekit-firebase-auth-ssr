@@ -1,9 +1,10 @@
-import { getApps, initializeApp, applicationDefault } from 'firebase-admin/app';
+import { getApps, initializeApp, cert, type ServiceAccount } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 
 if (!getApps().length) {
+	const body = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!) as ServiceAccount;
 	initializeApp({
-		credential: applicationDefault()
+		credential: cert(body)
 	});
 }
 
