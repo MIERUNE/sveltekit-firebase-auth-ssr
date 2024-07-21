@@ -1,6 +1,6 @@
 export type PublicUserInfo = {
 	uid: string;
-	displayName: string;
+	name: string;
 };
 
 export type BasicPrivateUserInfo = {

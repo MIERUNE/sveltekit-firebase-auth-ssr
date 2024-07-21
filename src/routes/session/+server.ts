@@ -1,10 +1,11 @@
-import type { RequestHandler } from './$types';
 import { createSessionCookie } from '$lib/firebase/server';
 
 /**
  * access_token (id_token) をセッションクッキーに変換してユーザに持たせるためのエンドポイント
+ *
+ * Note: FormによるCSRFは、SvleteKitのCSRF対策によって防がれる。
  */
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST = async ({ request, cookies }) => {
 	return request
 		.json()
 		.then(async (data) => {
