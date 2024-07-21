@@ -1,7 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { verifySessionCookie } from '$lib/firebase/server';
-import { getUser } from '$lib/firebase/server';
 
 /**
  * セッションクッキーの検証
@@ -11,12 +10,10 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 	if (session) {
 		try {
 			const decoded = await verifySessionCookie(session);
-			const userRecord = await getUser(decoded.uid); // TODO: Use our very own user backend instead
-
 			event.locals.currentUser = {
-				uid: userRecord.uid,
-				displayName: userRecord.displayName || '',
-				email: userRecord.email || undefined
+				uid: decoded.uid,
+				name: decoded.name || '',
+				email: decoded.email
 			};
 		} catch {
 			// ignore
@@ -28,7 +25,7 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 /**
  * 認証ガード
  *
- * 未認証ユーザなどを、リダイレクトしてしまいたいときに使う。
+ * 未認証ユーザなどを、別のページにリダイレクトするのが良い場合に。
  */
 const authGuard: Handle = async ({ event, resolve }) => {
 	const currentUser = event.locals.currentUser;

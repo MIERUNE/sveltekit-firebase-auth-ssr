@@ -1,7 +1,7 @@
 // Firebase Authentication のブラウザ側用のコード
 
 import { GoogleAuthProvider } from 'firebase/auth';
-import { getAuth, signInWithPopup, type User } from 'firebase/auth';
+import { getAuth, signInWithPopup } from 'firebase/auth';
 import { browser } from '$app/environment';
 import { invalidate } from '$app/navigation';
 import { initializeApp } from 'firebase/app';
