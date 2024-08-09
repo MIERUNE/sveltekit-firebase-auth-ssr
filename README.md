@@ -1,4 +1,4 @@
-# sveltekit-firebaseauth-ssr
+# sveltekit-firebaseauth-ssr-stripe
 
 SvelteKit (Svelte 5, SSR) + Firebase Authentication の統合デモ。
 
