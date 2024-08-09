@@ -30,9 +30,17 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 const authGuard: Handle = async ({ event, resolve }) => {
 	const currentUser = event.locals.currentUser;
 
-	if (!currentUser && event.url.pathname.startsWith('/private')) {
-		return redirect(303, '/login?next=' + encodeURIComponent(event.url.pathname));
+	if (!currentUser) {
+		const path = event.url.pathname;
+		if (path.startsWith('/private') || path.startsWith('/shop')) {
+			return redirect(303, '/login?next=' + encodeURIComponent(event.url.pathname));
+		}
 	}
+
+	// if (!currentUser && event.url.pathname.startsWith('/shop')) {
+	// 	return redirect(303, '/login?next=' + encodeURIComponent(event.url.pathname));
+	// }
+
 	if (currentUser && event.url.pathname === '/login') {
 		const next = event.url.searchParams.get('next');
 		const url = next ? decodeURIComponent(next) : '/private';

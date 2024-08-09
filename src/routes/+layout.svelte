@@ -10,6 +10,7 @@
 <ul>
 	<li><a href="/">Home</a></li>
 	<li><a href="/private">Private</a></li>
+	<li><a href="/shop">Shop</a></li>
 	{#if data.currentUser === undefined}
 		<li><a href="/login">Login</a></li>
 	{/if}
