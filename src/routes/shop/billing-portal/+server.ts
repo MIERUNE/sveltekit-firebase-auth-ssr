@@ -3,7 +3,7 @@ import { stripe } from '$lib/stripe/stripe';
 
 export async function GET({ url, cookies, locals }) {
 	if (!locals.currentUser) {
-		redirect(302, '/');
+		redirect(303, '/');
 	}
 	const email = locals.currentUser.email;
 
@@ -19,7 +19,7 @@ export async function GET({ url, cookies, locals }) {
 	}
 
 	if (customerId === undefined) {
-		throw redirect(302, '/');
+		throw redirect(303, '/');
 	}
 
 	const billingPortalSession = await stripe.billingPortal.sessions.create({

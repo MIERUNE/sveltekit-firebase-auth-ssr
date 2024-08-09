@@ -37,10 +37,6 @@ const authGuard: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	// if (!currentUser && event.url.pathname.startsWith('/shop')) {
-	// 	return redirect(303, '/login?next=' + encodeURIComponent(event.url.pathname));
-	// }
-
 	if (currentUser && event.url.pathname === '/login') {
 		const next = event.url.searchParams.get('next');
 		const url = next ? decodeURIComponent(next) : '/private';

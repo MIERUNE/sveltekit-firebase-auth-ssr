@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 
 export async function load({ url, cookies, locals }) {
 	if (!locals.currentUser) {
-		redirect(302, '/');
+		redirect(303, '/');
 	}
 	const email = locals.currentUser.email;
 
