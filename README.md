@@ -1,6 +1,6 @@
 # sveltekit-firebaseauth-ssr
 
-SvelteKit (Svelte 5, SSR) + Firebase Authentication の統合デモ
+SvelteKit (Svelte 5, SSR) + Firebase Authentication の統合デモ。
 
 ## 実行方法
 
@@ -15,6 +15,8 @@ npm run dev
 ```
 
 ## 仕組み
+
+Supabase公式のSvelteKit用SSRガイドなども参考にしつつ、よりシンプルにしている。
 
 ```mermaid
 graph TB;
@@ -49,4 +51,4 @@ graph TB;
 ## Known issues
 
 - Cloudflare Pages/Workers では、`firebase-admin` とNode.js互換モードの相性が悪くて動かない。
-- CSRF 対策
+    - ので、Vercelを使っている。
