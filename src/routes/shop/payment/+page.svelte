@@ -11,6 +11,8 @@
 
 <p>Customer Id: {data.customerId}</p>
 
+<p>ダミーカード番号として: 4242 4242 4242 4242 (Visa) などが使えます</p>
+
 {#if stripe.stripe}
 	<EmbeddedCheckout stripe={stripe.stripe} clientSecret={data.clientSecret} />
 {/if}

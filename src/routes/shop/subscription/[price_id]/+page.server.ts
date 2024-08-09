@@ -10,7 +10,7 @@ export async function load({ url, cookies, params, locals }) {
 	// マネしちゃだめ！ URL から価格IDを取得する
 	const priceId = params.price_id;
 
-	// マネしちゃだめ！ Cookie を使ってStripeの顧客IDを保持する
+	// マネしちゃだめ！ Cookie にStripeの顧客IDを保持しておく
 	let customerId = cookies.get('customer_id');
 	if (!customerId) {
 		const customer = await stripe.customers.create({
