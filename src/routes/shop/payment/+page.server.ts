@@ -7,8 +7,8 @@ export async function load({ url, cookies, locals }) {
 	}
 	const email = locals.currentUser.email;
 
-	// キケン！
-	// Cookie を使ってStripeの顧客IDを保持する
+	// マネしちゃだめ！
+	// 永続化層がないので、 Cookieを使ってStripeの顧客IDを保持しておく
 	let customerId = cookies.get('customer_id');
 	if (!customerId) {
 		const customer = await stripe.customers.create({
@@ -23,7 +23,7 @@ export async function load({ url, cookies, locals }) {
 		customer: customerId,
 		line_items: [
 			{
-				price: 'price_1PkKYCLtNIgQdVMEIO2U71nd',
+				price: 'price_1PkKYCLtNIgQdVMEIO2U71nd', // どら焼き
 				quantity: 1
 			}
 		],
