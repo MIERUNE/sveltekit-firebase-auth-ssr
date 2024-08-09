@@ -16,7 +16,7 @@ export const POST = async ({ request, cookies }) => {
 				cookies.set('session', cookie, {
 					path: '/',
 					maxAge: 60 * 60 * 24 * days,
-					sameSite: 'strict'
+					sameSite: 'lax'
 				});
 			} else {
 				cookies.delete('session', { path: '/' });
