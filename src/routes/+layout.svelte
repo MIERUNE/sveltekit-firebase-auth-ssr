@@ -7,7 +7,11 @@
 	}>();
 </script>
 
-<p><a href="https://github.com/MIERUNE/sveltekit-firebaseauth-ssr-stripe">GitHub: MIERUNE/sveltekit-firebaseauth-ssr-stripe</a></p>
+<p>
+	GitHub: <a href="https://github.com/MIERUNE/sveltekit-firebaseauth-ssr-stripe" target="_blank"
+		>MIERUNE/sveltekit-firebaseauth-ssr-stripe</a
+	>
+</p>
 
 <ul>
 	<li><a href="/">Home</a></li>
