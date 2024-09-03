@@ -2,6 +2,12 @@
 
 SvelteKit (Svelte 5, SSR) + Firebase Authentication の統合デモ。
 
+## Known issues
+
+- Cloudflare Pages/Workers では、`firebase-admin` とNode.js互換モードの相性が悪くて動かない。
+    - ので、ひとまずVercelを使っている。
+    - が、 https://github.com/Code-Hex/firebase-auth-cloudflare-workers を使えばいいだろう
+
 ## 実行方法
 
 環境変数 `GOOGLE_SERVICE_ACCOUNT_KEY` で Firebase プロジェクトのサービスアカウントキーファイル (JSON) の中身を渡すこと。
@@ -48,7 +54,3 @@ graph TB;
 2. `routes/+layout.server.ts` で、 `locals` のユーザ情報を `data` に変換する。
    - レイアウトの data はそのレイアウト配下のすべての `routes/**/+page.svelte`, `routes/**/+layout.svelte` で参照できる。
 
-## Known issues
-
-- Cloudflare Pages/Workers では、`firebase-admin` とNode.js互換モードの相性が悪くて動かない。
-    - ので、Vercelを使っている。
