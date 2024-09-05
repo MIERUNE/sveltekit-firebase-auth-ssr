@@ -1,29 +1,28 @@
 // Firebase Authentication のサーバ側のコード
 
-import { getApps, initializeApp, cert, type ServiceAccount } from 'firebase-admin/app';
-import { getAuth } from 'firebase-admin/auth';
+import { Auth, type KeyStorer, ServiceAccountCredential } from 'firebase-auth-cloudflare-workers';
 
-/**
- * Firebase Admin SDK の初期化 (HMR のたびに多重に初期化されるのを防いでいる)
- */
-if (!getApps().length) {
-	const body = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!) as ServiceAccount;
-	initializeApp({
-		credential: cert(body)
-	});
+import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
+
+function getAuth(keys: KeyStorer) {
+	return Auth.getOrInitialize(
+		'fukada-delete-me',
+		keys,
+		new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY)
+	);
 }
 
-export async function createSessionCookie(idToken: string, days: number) {
-	return await getAuth().createSessionCookie(idToken, {
+export async function createSessionCookie(keys: KeyStorer, idToken: string, days: number) {
+	return await getAuth(keys).createSessionCookie(idToken, {
 		expiresIn: 1000 * 60 * 60 * 24 * days
 	});
 }
 
-export async function verifySessionCookie(session: string) {
+export async function verifySessionCookie(keys: KeyStorer, session: string) {
 	const checkRevoked = false;
-	return await getAuth().verifySessionCookie(session, checkRevoked);
+	return await getAuth(keys).verifySessionCookie(session, checkRevoked);
 }
 
-export async function getUser(uid: string) {
-	return await getAuth().getUser(uid);
+export async function getUser(keys: KeyStorer, uid: string) {
+	return await getAuth(keys).getUser(uid);
 }

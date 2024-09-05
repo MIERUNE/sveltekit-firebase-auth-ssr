@@ -3,7 +3,7 @@ import { error, json } from '@sveltejs/kit';
 /**
  * てきとうなデモAPI
  */
-export const GET = async ({ locals: { currentUser } }) => {
+export const GET = async ({ locals: { currentUser }, platform }) => {
 	if (!currentUser) {
 		error(401, 'Unauthorized');
 	}
@@ -11,7 +11,7 @@ export const GET = async ({ locals: { currentUser } }) => {
 	const posts = [];
 	for (let i = 0; i < 10; i++) {
 		posts.push({
-			title: 'My first post',
+			title: (await platform?.env?.KV.get('pubkey')) || 'none',
 			author: currentUser.name || ''
 		});
 	}

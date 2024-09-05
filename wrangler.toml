@@ -1,0 +1,6 @@
+name = "sveltekit-firebaseauth-ssr-stripe-demo"
+pages_build_output_dir = ".svelte-kit/cloudflare"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "cc61b1444bc2402dada2541b9ae18c49"

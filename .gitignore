@@ -2,9 +2,9 @@ node_modules
 
 # Output
 .output
-.vercel
 /.svelte-kit
 /build
+.wrangler
 
 # OS
 .DS_Store

@@ -13,7 +13,11 @@ declare global {
 			currentUser?: BasicPrivateUserInfo;
 		}
 		// interface PageState {}
-		// interface Platform {}
+		interface Platform {
+			env?: {
+				KV: KVNamespace;
+			};
+		}
 	}
 }
 

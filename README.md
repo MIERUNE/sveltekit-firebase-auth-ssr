@@ -53,4 +53,3 @@ graph TB;
    - （`locals` はサーバサイドコードでリクエストローカルなデータを受け渡すための場所）
 2. `routes/+layout.server.ts` で、 `locals` のユーザ情報を `data` に変換する。
    - レイアウトの data はそのレイアウト配下のすべての `routes/**/+page.svelte`, `routes/**/+layout.svelte` で参照できる。
-

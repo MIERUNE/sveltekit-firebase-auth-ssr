@@ -1,15 +1,18 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { verifySessionCookie } from '$lib/firebase/server';
+import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers';
 
 /**
  * セッションクッキーの検証
  */
 const verifySessionToken: Handle = async ({ event, resolve }) => {
 	const session = event.cookies.get('session');
+	const keys = WorkersKVStoreSingle.getOrInitialize('pubkeys', event.platform?.env?.KV);
+
 	if (session) {
 		try {
-			const decoded = await verifySessionCookie(session);
+			const decoded = await verifySessionCookie(keys, session);
 			event.locals.currentUser = {
 				uid: decoded.uid,
 				name: decoded.name || '',
