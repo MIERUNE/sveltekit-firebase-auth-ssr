@@ -1,5 +1,5 @@
 import { createSessionCookie } from '$lib/firebase/server';
-import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers';
+import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers-x509';
 
 /**
  * access_token (id_token) をセッションクッキーに変換してユーザに持たせるためのエンドポイント
@@ -8,10 +8,12 @@ import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers';
  */
 export const POST = async ({ request, cookies, platform }) => {
 	const keys = WorkersKVStoreSingle.getOrInitialize('pubkeys', platform?.env?.KV);
+
 	return request
 		.json()
 		.then(async (data) => {
 			const idToken = data.idToken;
+
 			const days = 14; // 5 min - 14 days
 			if (typeof idToken === 'string') {
 				const cookie = await createSessionCookie(keys, idToken, days);

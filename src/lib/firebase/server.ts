@@ -1,6 +1,10 @@
 // Firebase Authentication のサーバ側のコード
 
-import { Auth, type KeyStorer, ServiceAccountCredential } from 'firebase-auth-cloudflare-workers';
+import {
+	Auth,
+	type KeyStorer,
+	ServiceAccountCredential
+} from 'firebase-auth-cloudflare-workers-x509';
 
 import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
 
@@ -21,6 +25,11 @@ export async function createSessionCookie(keys: KeyStorer, idToken: string, days
 export async function verifySessionCookie(keys: KeyStorer, session: string) {
 	const checkRevoked = false;
 	return await getAuth(keys).verifySessionCookie(session, checkRevoked);
+}
+
+export async function verifyIdToken(keys: KeyStorer, idToken: string) {
+	const checkRevoked = false;
+	return await getAuth(keys).verifyIdToken(idToken, checkRevoked);
 }
 
 export async function getUser(keys: KeyStorer, uid: string) {

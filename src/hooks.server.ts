@@ -1,7 +1,7 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { type Handle, redirect } from '@sveltejs/kit';
 import { verifySessionCookie } from '$lib/firebase/server';
-import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers';
+import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers-x509';
 
 /**
  * セッションクッキーの検証
@@ -18,7 +18,8 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 				name: decoded.name || '',
 				email: decoded.email
 			};
-		} catch {
+		} catch (e) {
+			console.log('Failed', e, session);
 			// ignore
 		}
 	}
