@@ -48,7 +48,9 @@
 		}
 	},
 	"type": "module",
-	"dependencies": {},
+	"dependencies": {
+		"hono": "^4.5.11"
+	},
 	"volta": {
 		"node": "20.17.0"
 	}

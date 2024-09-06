@@ -8,6 +8,6 @@
 
 <ul>
 	{#each data.posts as post}
-		<li>{post.title}</li>
+		<li>{post.title} by {post.author}</li>
 	{/each}
 </ul>
