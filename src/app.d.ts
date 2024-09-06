@@ -4,6 +4,10 @@ import type { BasicPrivateUserInfo } from './lib/user';
 
 // for information about these interfaces
 declare global {
+	interface Env {
+		KV: KVNamespace;
+	}
+
 	namespace App {
 		// interface Error {}
 		interface Locals {
@@ -14,9 +18,7 @@ declare global {
 		}
 		// interface PageState {}
 		interface Platform {
-			env?: {
-				KV: KVNamespace;
-			};
+			env?: EnV;
 		}
 	}
 }

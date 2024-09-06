@@ -12,8 +12,7 @@ export const POST = async ({ request, cookies, platform }) => {
 	return request
 		.json()
 		.then(async (data) => {
-			const idToken = data.idToken;
-
+			const idToken = (data as { idToken?: string }).idToken;
 			const days = 14; // 5 min - 14 days
 			if (typeof idToken === 'string') {
 				const cookie = await createSessionCookie(keys, idToken, days);
