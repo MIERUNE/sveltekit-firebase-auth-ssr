@@ -1,13 +1,12 @@
 // Firebase Authentication のブラウザ側用のコード
 
-import { GoogleAuthProvider } from 'firebase/auth';
-import { getAuth, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { browser } from '$app/environment';
 import { invalidate } from '$app/navigation';
 import { initializeApp } from 'firebase/app';
 
 // これらは秘匿情報ではない
-const firebaseConfig = {
+export const firebaseConfig = {
 	apiKey: 'AIzaSyCqkxdTAOegNHszt2gHJp8Jkss2v9IZ71c',
 	authDomain: 'fukada-delete-me.firebaseapp.com',
 	projectId: 'fukada-delete-me',
@@ -19,8 +18,8 @@ const firebaseConfig = {
 if (browser) {
 	initializeApp(firebaseConfig);
 
-	const auth = getAuth();
-	auth.onIdTokenChanged((user) => {
+	// idToken が変わったら、セッショントークンを発行させる
+	getAuth().onIdTokenChanged((user) => {
 		if (user) {
 			user.getIdToken().then((idToken) => {
 				updateSession(idToken);

@@ -1,15 +1,10 @@
 import type { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
-import {
-	Auth,
-	ServiceAccountCredential,
-	WorkersKVStoreSingle
-} from 'firebase-auth-cloudflare-workers-x509';
-import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
 import { HTTPException } from 'hono/http-exception';
+import { getAuthWithKV } from '$lib/firebase/server';
 
-type CurrentUser = {
+export type CurrentUser = {
 	uid: string;
 	name: string;
 };
@@ -21,14 +16,9 @@ export interface AuthVariables {
 export const authMiddleware = createMiddleware(async (c, next) => {
 	const sessionCookie = getCookie(c, 'session');
 	if (sessionCookie) {
-		const keys = WorkersKVStoreSingle.getOrInitialize('pubkeys', c.env.KV);
-		const auth = Auth.getOrInitialize(
-			'fukada-delete-me',
-			keys,
-			new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY)
-		);
+		const auth = getAuthWithKV(c.env.KV);
 		try {
-			const idToken = await auth.verifySessionCookie(sessionCookie);
+			const idToken = await auth.verifySessionCookie(sessionCookie, false);
 			c.set('currentUser', {
 				uid: idToken.uid,
 				name: idToken.name

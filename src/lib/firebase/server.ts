@@ -1,37 +1,24 @@
-// Firebase Authentication のサーバ側のコード
+// Firebase Authentication のサーバ側用のコード
 
 import {
 	Auth,
-	type KeyStorer,
-	ServiceAccountCredential
+	ServiceAccountCredential,
+	WorkersKVStoreSingle,
+	type KeyStorer
 } from 'firebase-auth-cloudflare-workers-x509';
+
+import { firebaseConfig } from './client';
 
 import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
 
-function getAuth(keys: KeyStorer) {
-	return Auth.getOrInitialize(
-		'fukada-delete-me',
-		keys,
-		new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY)
-	);
+export const projectId = firebaseConfig.projectId;
+export const serviceAccountCredential = new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY);
+
+export function getAuthWithKV(kv: KVNamespace) {
+	const storer = WorkersKVStoreSingle.getOrInitialize('pubkeys', kv);
+	return getAuthWithStorer(storer);
 }
 
-export async function createSessionCookie(keys: KeyStorer, idToken: string, days: number) {
-	return await getAuth(keys).createSessionCookie(idToken, {
-		expiresIn: 1000 * 60 * 60 * 24 * days
-	});
-}
-
-export async function verifySessionCookie(keys: KeyStorer, session: string) {
-	const checkRevoked = false;
-	return await getAuth(keys).verifySessionCookie(session, checkRevoked);
-}
-
-export async function verifyIdToken(keys: KeyStorer, idToken: string) {
-	const checkRevoked = false;
-	return await getAuth(keys).verifyIdToken(idToken, checkRevoked);
-}
-
-export async function getUser(keys: KeyStorer, uid: string) {
-	return await getAuth(keys).getUser(uid);
+export function getAuthWithStorer(keys: KeyStorer) {
+	return Auth.getOrInitialize(projectId, keys, serviceAccountCredential);
 }

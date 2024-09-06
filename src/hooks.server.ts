@@ -1,18 +1,17 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { type Handle, redirect } from '@sveltejs/kit';
-import { verifySessionCookie } from '$lib/firebase/server';
-import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers-x509';
+import { getAuthWithKV } from '$lib/firebase/server';
 
 /**
  * セッションクッキーの検証
  */
 const verifySessionToken: Handle = async ({ event, resolve }) => {
-	const session = event.cookies.get('session');
-	const keys = WorkersKVStoreSingle.getOrInitialize('pubkeys', event.platform?.env?.KV);
+	const auth = getAuthWithKV(event.platform?.env?.KV);
 
+	const session = event.cookies.get('session');
 	if (session) {
 		try {
-			const decoded = await verifySessionCookie(keys, session);
+			const decoded = await auth.verifySessionCookie(session, false);
 			event.locals.currentUser = {
 				uid: decoded.uid,
 				name: decoded.name || '',
@@ -29,7 +28,7 @@ const verifySessionToken: Handle = async ({ event, resolve }) => {
 /**
  * 認証ガード
  *
- * 未認証ユーザなどを、別のページにリダイレクトするのが良い場合に。
+ * 未認証のユーザなどを、別のページにリダイレクトするのが良い場合に。
  */
 const authGuard: Handle = async ({ event, resolve }) => {
 	const currentUser = event.locals.currentUser;

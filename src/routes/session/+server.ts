@@ -1,5 +1,4 @@
-import { createSessionCookie } from '$lib/firebase/server';
-import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers-x509';
+import { getAuthWithKV } from '$lib/firebase/server';
 
 /**
  * access_token (id_token) をセッションクッキーに変換してユーザに持たせるためのエンドポイント
@@ -7,7 +6,7 @@ import { WorkersKVStoreSingle } from 'firebase-auth-cloudflare-workers-x509';
  * Note: FormによるCSRFは、SvleteKitのCSRF対策によって防がれる。
  */
 export const POST = async ({ request, cookies, platform }) => {
-	const keys = WorkersKVStoreSingle.getOrInitialize('pubkeys', platform?.env?.KV);
+	const auth = getAuthWithKV(platform?.env?.KV);
 
 	return request
 		.json()
@@ -15,7 +14,9 @@ export const POST = async ({ request, cookies, platform }) => {
 			const idToken = (data as { idToken?: string }).idToken;
 			const days = 14; // 5 min - 14 days
 			if (typeof idToken === 'string') {
-				const cookie = await createSessionCookie(keys, idToken, days);
+				const cookie = await auth.createSessionCookie(idToken, {
+					expiresIn: 1000 * 60 * 60 * 24 * days
+				});
 				cookies.set('session', cookie, {
 					path: '/',
 					maxAge: 60 * 60 * 24 * days,
