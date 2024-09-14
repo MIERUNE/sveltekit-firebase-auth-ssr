@@ -8,35 +8,13 @@ import {
 	type KeyStorer
 } from 'firebase-auth-cloudflare-workers-x509';
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
-
-export function getAuth(projectId: string, credential: ServiceAccountCredential, kv?: KVNamespace) {
-	const keyStore = kv ? WorkersKVStoreSingle.getOrInitialize('pubkeys', kv) : makeMemoryStore();
-	return Auth.getOrInitialize(projectId, keyStore, credential);
-}
-
-// Cloudflare KV が使えない環境ではメモリに公開鍵をキャッシュする
-function makeMemoryStore() {
-	let val: string | null = null;
-	let expireAt: number = 0;
-	return {
-		async get() {
-			if (Date.now() > expireAt) {
-				val = null;
-			}
-			return val ? JSON.parse(val) : null;
-		},
-		async put(value: string, expirationTtl: number) {
-			expireAt = Date.now() + expirationTtl * 1000;
-			val = value;
-		}
-	} satisfies KeyStorer;
-}
+export { ServiceAccountCredential } from 'firebase-auth-cloudflare-workers-x509';
 
 export type AuthHookOptions = {
 	projectId: string;
 	serviceAccountCredential: ServiceAccountCredential;
 	tokenToUser: (decodedToken: FirebaseIdToken) => Promise<App.Locals['currentUser']>;
-	guardPath?: RegExp;
+	guardPathPattern?: RegExp;
 };
 
 /**
@@ -46,13 +24,12 @@ export function createAuthHook({
 	projectId,
 	serviceAccountCredential,
 	tokenToUser,
-	guardPath
+	guardPathPattern: guardPath
 }: AuthHookOptions): Handle {
 	return async ({ event, resolve }) => {
 		const auth = getAuth(projectId, serviceAccountCredential, event.platform?.env?.KV);
 		const { request, cookies, fetch } = event;
 
-		// 特別なルートの処理
 		if (event.url.pathname.startsWith('/__/auth/')) {
 			// ref: Best practices for using signInWithRedirect on browsers that block third-party storage access
 			// "Option 3: Proxy auth requests to firebaseapp.com"
@@ -91,6 +68,28 @@ export function createAuthHook({
 		}
 		return resolve(event);
 	};
+}
+
+export function getAuth(projectId: string, credential: ServiceAccountCredential, kv?: KVNamespace) {
+	const keyStore = kv ? WorkersKVStoreSingle.getOrInitialize('pubkeys', kv) : new MemoryStore();
+	return Auth.getOrInitialize(projectId, keyStore, credential);
+}
+
+// Cloudflare 以外の環境ではメモリに公開鍵をキャッシュする
+class MemoryStore implements KeyStorer {
+	private val: string | null = null;
+	private expireAt: number = 0;
+
+	async get() {
+		if (Date.now() > this.expireAt) {
+			this.val = null;
+		}
+		return this.val ? JSON.parse(this.val) : null;
+	}
+	async put(value: string, expirationTtl: number) {
+		this.expireAt = Date.now() + expirationTtl * 1000;
+		this.val = value;
+	}
 }
 
 // ref: "Option 3: Proxy auth requests to firebaseapp.com"

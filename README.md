@@ -1,49 +1,55 @@
-# sveltekit-firebaseauth-ssr-stripe
+# @mierune/sveltekit-firebase-auth-ssr
 
-SvelteKit (Svelte 5, SSR) + Firebase Authentication の統合デモ。
+## Usage
 
-## 実行方法
+1. 必要なもの：
+    - Firebase プロジェクトの Project ID
+    - Firebase プロジェクトの API Key
+    - Firebase の（Google Cloudの）サービスアカウントキー
 
-環境変数 `GOOGLE_SERVICE_ACCOUNT_KEY` で Firebase プロジェクトのサービスアカウントキーファイル (JSON) の中身を渡すこと。
+2. `src/hooks.client.ts` に以下のようなコードを加える。
 
-```bash
-cp .env.example .env
+    TODO
 
-# 内容を編集
+3. `src/hooks.server.ts` に以下のようなコードを加える。
 
-npm run dev
-```
+    TODO
 
-## 仕組み
+4. `src/app.d.ts` に以下のようなコードを加える。
 
-Supabase公式のSvelteKit用SSRガイドなども参考にしつつ、よりシンプルにしている。
+    TODO
+
+4. `src/routes/+layout.server.ts` に以下のようなコードを加える。
+
+    TODO
+
+5. 適切な場所でサインインとサインアウトを実装する。
+
+6. 必要な場所でユーザ情報を利用する。
+
+## 概要図
 
 ```mermaid
 graph TB;
     subgraph "External"
-        IDaaS["IDaaS (Firebase Auth)"]
+        IDaaS["Firebase Auth"]
     end
     subgraph "SvelteKit (server)"
         Hooks[hooks.server.ts]
         Layout[routes/+layout.server.ts]
-        Session["routes/session/+server.ts"]
+        Session["/session"]
         locals((locals))
     end
     subgraph "SvelteKit (universal)"
         Client["Browser"]
-        Univ["routes/**/+page.(svelte|ts)\n+routes/**/layout.(svelte|ts)"]
+        Univ["+(layout|page).(svelte|ts)"]
         data((data))
     end
     IDaaS <--sign-in--> Client
     IDaaS --public key--> Hooks
-    Client --with Cookie--> Hooks
+    Client --with session cookie--> Hooks
     Hooks --currentUser--> locals --> Layout
     Hooks --> Session --Set-Cookie--> Client
     Layout --currentUser--> data
     data --> Univ
 ```
-
-1. 認証ガードを `hooks.server.ts` で行うため、`hooks.server.ts` の時点で Cookie を検証しておく必要がある。得られたユーザ情報は `locals` で次に渡す。
-   - （`locals` はサーバサイドコードでリクエストローカルなデータを受け渡すための場所）
-2. `routes/+layout.server.ts` で、 `locals` のユーザ情報を `data` に変換する。
-   - レイアウトの data はそのレイアウト配下のすべての `routes/**/+page.svelte`, `routes/**/+layout.svelte` で参照できる。

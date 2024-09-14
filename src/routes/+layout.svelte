@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { logout } from '$lib/firebase/client';
+	import { signOut } from '$lib/firebase-auth/client';
 	import type { PageData } from './$types';
 
 	let {
@@ -13,8 +13,8 @@
 </script>
 
 <p>
-	GitHub: <a href="https://github.com/MIERUNE/sveltekit-firebaseauth-ssr-stripe" target="_blank"
-		>MIERUNE/sveltekit-firebaseauth-ssr-stripe</a
+	GitHub: <a href="https://github.com/MIERUNE/sveltekit-firebase-auth-ssr" target="_blank"
+		>MIERUNE/sveltekit-firebase-auth-ssr</a
 	>
 </p>
 
@@ -30,7 +30,7 @@
 <p>
 	{#if data.currentUser !== undefined}
 		<code>{JSON.stringify(data.currentUser)}</code>
-		<button onclick={logout} disabled={data.currentUser === undefined}>Logout</button>
+		<button onclick={signOut} disabled={data.currentUser === undefined}>Logout</button>
 	{/if}
 </p>
 

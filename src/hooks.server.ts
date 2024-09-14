@@ -1,6 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
-import { createAuthHook } from '$lib/firebase/server';
-import { ServiceAccountCredential } from 'firebase-auth-cloudflare-workers-x509';
+import { createAuthHook, ServiceAccountCredential } from '$lib/firebase-auth/server';
+
 import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
 import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
 
@@ -10,11 +10,14 @@ export const handle = sequence(
 	createAuthHook({
 		projectId: PUBLIC_FIREBASE_PROJECT_ID,
 		serviceAccountCredential,
-		tokenToUser: async (decodedToken) => ({
-			uid: decodedToken.uid,
-			email: decodedToken.email,
-			name: decodedToken.name
-		}),
-		guardPath: /^\/(private|shop)(\/.*)?/
+		tokenToUser: async (decodedToken) => {
+			// トークンをもとにユーザ情報を取得して返す
+			return {
+				uid: decodedToken.uid,
+				email: decodedToken.email,
+				name: decodedToken.name
+			};
+		},
+		guardPathPattern: /^\/(private|shop)(\/.*)?/
 	})
 );

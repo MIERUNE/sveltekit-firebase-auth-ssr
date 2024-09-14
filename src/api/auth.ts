@@ -2,11 +2,10 @@ import type { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { getAuth } from '$lib/firebase/server';
+import { getAuth, ServiceAccountCredential } from '$lib/firebase-auth/server';
 
 import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
 import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
-import { ServiceAccountCredential } from 'firebase-auth-cloudflare-workers-x509';
 
 const serviceAccountCredential = new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY);
 

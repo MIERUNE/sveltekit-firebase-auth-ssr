@@ -1,22 +1,20 @@
-import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { updateSession } from '$lib/firebase/client';
+import { setupAuthClient } from '$lib/firebase-auth/client';
 import { PUBLIC_FIREBASE_API_KEY, PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
 
-export const firebaseConfig = {
-	apiKey: PUBLIC_FIREBASE_API_KEY, // これは秘匿情報ではない
-	authDomain: `${PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-	projectId: PUBLIC_FIREBASE_PROJECT_ID
-};
+// 許可されたドメインでのみ、そのドメインを authDomain として使ってリダイレクト方式によるサインインを行う。
+// それ以外の場合はデフォルトの authDomain を使ってポップアップ方式によるサインインを行う。
+const defaultAuthDomain = `${PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`;
+const allowedAuthDomains = ['sveltekit-firebase-auth-ssr-stripe-demo.pages.dev', defaultAuthDomain];
+let authDomain = defaultAuthDomain;
+if (location.protocol === 'https:' && allowedAuthDomains.includes(location.host)) {
+	authDomain = location.host;
+}
 
 initializeApp({
-	...firebaseConfig,
-	authDomain: location.protocol === 'https:' ? location.host : firebaseConfig.authDomain
+	apiKey: PUBLIC_FIREBASE_API_KEY,
+	authDomain,
+	projectId: PUBLIC_FIREBASE_PROJECT_ID
 });
 
-// idToken が変わったら、サーバ側を介してセッショントークンを Set-Cookie させる
-getAuth().onIdTokenChanged(async (user) => {
-	if (user) {
-		updateSession(await user.getIdToken());
-	}
-});
+setupAuthClient();
