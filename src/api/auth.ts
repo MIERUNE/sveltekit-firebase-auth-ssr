@@ -2,7 +2,7 @@ import type { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { getAuthWithKV } from '$lib/firebase/server';
+import { getAuth } from '$lib/firebase/server';
 
 export type CurrentUser = {
 	uid: string;
@@ -16,7 +16,7 @@ export interface AuthVariables {
 export const authMiddleware = createMiddleware(async (c, next) => {
 	const sessionCookie = getCookie(c, 'session');
 	if (sessionCookie) {
-		const auth = getAuthWithKV(c.env.KV);
+		const auth = getAuth(c.env?.KV);
 		try {
 			const idToken = await auth.verifySessionCookie(sessionCookie, false);
 			c.set('currentUser', {

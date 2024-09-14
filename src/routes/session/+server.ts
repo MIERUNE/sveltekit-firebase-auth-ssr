@@ -1,12 +1,12 @@
-import { getAuthWithKV } from '$lib/firebase/server';
+import { getAuth } from '$lib/firebase/server';
 
 /**
- * access_token (id_token) をセッションクッキーに変換してユーザに持たせるためのエンドポイント
+ * access_token (id_token) をセッションクッキーに変換してブラウザに持たせるためのエンドポイント
  *
- * Note: FormによるCSRFは、SvleteKitのCSRF対策によって防がれる。
+ * Note: FormによるCSRFはSvleteKitによって防がれるため、特に追加のCSRF対策はしていない。
  */
 export const POST = async ({ request, cookies, platform }) => {
-	const auth = getAuthWithKV(platform?.env?.KV);
+	const auth = getAuth(platform?.env?.KV);
 
 	return request
 		.json()

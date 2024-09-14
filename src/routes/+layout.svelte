@@ -1,10 +1,15 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { logout } from '$lib/firebase/client.js';
+	import type { PageData } from './$types';
 
-	let { children, data } = $props<{
+	let {
+		data,
+		children
+	}: {
+		data: PageData;
 		children: Snippet;
-	}>();
+	} = $props();
 </script>
 
 <p>
