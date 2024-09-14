@@ -1,8 +1,8 @@
 export type PublicUserInfo = {
 	uid: string;
-	name: string;
 };
 
 export type BasicPrivateUserInfo = {
+	name: string;
 	email?: string;
 } & PublicUserInfo;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { login, waitForRedirectResult } from '$lib/firebase/client.js';
+	import { login, waitForRedirectResult } from '$lib/firebase/client';
 	import { page } from '$app/stores';
 
 	const redirectResult = waitForRedirectResult();
@@ -12,7 +12,7 @@
 {#await redirectResult}
 	loading...
 {:then result}
-	{#if result === null}
+	{#if !result}
 		{#if $page.url.searchParams.get('next')}
 			<p>ログインが必要です</p>
 		{/if}

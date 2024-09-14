@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { logout } from '$lib/firebase/client.js';
+	import { logout } from '$lib/firebase/client';
 	import type { PageData } from './$types';
 
 	let {

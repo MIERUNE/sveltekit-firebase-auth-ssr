@@ -4,6 +4,12 @@ import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
 import { getAuth } from '$lib/firebase/server';
 
+import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
+import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
+import { ServiceAccountCredential } from 'firebase-auth-cloudflare-workers-x509';
+
+const serviceAccountCredential = new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY);
+
 export type CurrentUser = {
 	uid: string;
 	name: string;
@@ -16,7 +22,7 @@ export interface AuthVariables {
 export const authMiddleware = createMiddleware(async (c, next) => {
 	const sessionCookie = getCookie(c, 'session');
 	if (sessionCookie) {
-		const auth = getAuth(c.env?.KV);
+		const auth = getAuth(PUBLIC_FIREBASE_PROJECT_ID, serviceAccountCredential, c.env?.KV);
 		try {
 			const idToken = await auth.verifySessionCookie(sessionCookie, false);
 			c.set('currentUser', {

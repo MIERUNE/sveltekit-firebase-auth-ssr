@@ -7,34 +7,7 @@ import {
 	signInWithRedirect,
 	getRedirectResult
 } from 'firebase/auth';
-import { browser } from '$app/environment';
 import { invalidate } from '$app/navigation';
-import { initializeApp } from 'firebase/app';
-
-// これらは秘匿情報ではない
-export const firebaseConfig = {
-	apiKey: 'AIzaSyCqkxdTAOegNHszt2gHJp8Jkss2v9IZ71c',
-	authDomain: 'fukada-delete-me.firebaseapp.com',
-	projectId: 'fukada-delete-me',
-	storageBucket: 'fukada-delete-me.appspot.com',
-	messagingSenderId: '115012131679',
-	appId: '1:115012131679:web:07da28782c877808d474ea'
-};
-
-if (browser) {
-	initializeApp({
-		...firebaseConfig,
-		authDomain: location.protocol === 'https:' ? location.host : firebaseConfig.authDomain
-	});
-	const auth = getAuth();
-
-	// idToken が変わったら、サーバ側にセッショントークンを発行させてブラウザに食べさせる
-	auth.onIdTokenChanged(async (user) => {
-		if (user) {
-			updateSession(await user.getIdToken());
-		}
-	});
-}
 
 export async function waitForRedirectResult() {
 	// リダイレクト方式によるサインイン結果があるときは、それを処理する
@@ -71,7 +44,7 @@ export async function logout() {
 	await getAuth().signOut();
 }
 
-async function updateSession(idToken: string | undefined) {
+export async function updateSession(idToken: string | undefined) {
 	await fetch('/session', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },

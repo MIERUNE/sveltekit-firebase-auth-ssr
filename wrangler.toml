@@ -5,3 +5,7 @@ compatibility_date = "2024-09-06"
 [[kv_namespaces]]
 binding = "KV"
 id = "cc61b1444bc2402dada2541b9ae18c49"
+
+[vars]
+PUBLIC_FIREBASE_PROJECT_ID = "fukada-delete-me"
+PUBLIC_FIREBASE_API_KEY = "AIzaSyCqkxdTAOegNHszt2gHJp8Jkss2v9IZ71c"

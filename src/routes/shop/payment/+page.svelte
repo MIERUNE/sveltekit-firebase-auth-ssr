@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { EmbeddedCheckout } from 'svelte-stripe';
-	import stripe from '$lib/stripe/stripe.svelte.js';
+	import stripe from '$lib/stripe/stripe.svelte';
 
 	let { data } = $props();
 </script>
