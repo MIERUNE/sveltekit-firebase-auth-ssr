@@ -28,7 +28,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
 		"firebase": "^10.12.3",
-		"firebase-auth-cloudflare-workers-x509": "^2.0.5",
+		"firebase-auth-cloudflare-workers-x509": "^2.0.8",
 		"globals": "^15.0.0",
 		"hono": "^4.5.11",
 		"prettier": "^3.1.1",
