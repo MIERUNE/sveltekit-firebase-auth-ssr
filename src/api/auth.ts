@@ -2,7 +2,12 @@ import type { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { getAuth, ServiceAccountCredential } from '$lib/firebase-auth/server';
+import {
+	getAuth,
+	InMemoryKeyStore,
+	ServiceAccountCredential,
+	WorkersKVStoreSingle
+} from '$lib/firebase-auth/server';
 
 import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
 import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
@@ -18,10 +23,15 @@ export interface AuthVariables {
 	currentUser?: CurrentUser;
 }
 
+const memKeyStore = new InMemoryKeyStore();
+
 export const authMiddleware = createMiddleware(async (c, next) => {
 	const sessionCookie = getCookie(c, 'session');
 	if (sessionCookie) {
-		const auth = getAuth(PUBLIC_FIREBASE_PROJECT_ID, serviceAccountCredential, c.env?.KV);
+		const kv = c.env?.KV;
+		const keyStore = kv ? WorkersKVStoreSingle.getOrInitialize('pubkeys', kv) : memKeyStore;
+		const auth = getAuth(PUBLIC_FIREBASE_PROJECT_ID, serviceAccountCredential, keyStore);
+
 		try {
 			const idToken = await auth.verifySessionCookie(sessionCookie, false);
 			c.set('currentUser', {

@@ -3,16 +3,19 @@
 import {
 	Auth,
 	ServiceAccountCredential,
-	WorkersKVStoreSingle,
 	type FirebaseIdToken,
 	type KeyStorer
 } from 'firebase-auth-cloudflare-workers-x509';
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
-export { ServiceAccountCredential } from 'firebase-auth-cloudflare-workers-x509';
+export {
+	ServiceAccountCredential,
+	WorkersKVStoreSingle
+} from 'firebase-auth-cloudflare-workers-x509';
 
 export type AuthHookOptions = {
 	projectId: string;
 	serviceAccountCredential: ServiceAccountCredential;
+	keyStore: (platform: Readonly<App.Platform> | undefined) => KeyStorer;
 	tokenToUser: (decodedToken: FirebaseIdToken) => Promise<App.Locals['currentUser']>;
 	guardPathPattern?: RegExp;
 };
@@ -24,10 +27,11 @@ export function createAuthHook({
 	projectId,
 	serviceAccountCredential,
 	tokenToUser,
+	keyStore: keyStoreMaker,
 	guardPathPattern: guardPath
 }: AuthHookOptions): Handle {
 	return async ({ event, resolve }) => {
-		const auth = getAuth(projectId, serviceAccountCredential, event.platform?.env?.KV);
+		const auth = getAuth(projectId, serviceAccountCredential, keyStoreMaker(event.platform));
 		const { request, cookies, fetch } = event;
 
 		if (event.url.pathname.startsWith('/__/auth/')) {
@@ -70,13 +74,16 @@ export function createAuthHook({
 	};
 }
 
-export function getAuth(projectId: string, credential: ServiceAccountCredential, kv?: KVNamespace) {
-	const keyStore = kv ? WorkersKVStoreSingle.getOrInitialize('pubkeys', kv) : new MemoryStore();
+export function getAuth(
+	projectId: string,
+	credential: ServiceAccountCredential,
+	keyStore: KeyStorer
+) {
 	return Auth.getOrInitialize(projectId, keyStore, credential);
 }
 
 // Cloudflare 以外の環境ではメモリに公開鍵をキャッシュする
-class MemoryStore implements KeyStorer {
+export class InMemoryKeyStore implements KeyStorer {
 	private val: string | null = null;
 	private expireAt: number = 0;
 
@@ -116,24 +123,28 @@ async function handleSessionEndpoint(request: Request, auth: Auth, cookies: Cook
 	});
 	const idToken = (data as { idToken?: string }).idToken;
 	const days = 14; // min: 5 min, max: 14 days
-	const headers: Record<string, string> = {};
+	let setCookie: string;
 	if (idToken) {
 		const sessionCookie = await auth.createSessionCookie(idToken, {
 			expiresIn: days * 24 * 60 * 60 * 1000
 		});
 		// set session cookie
 		// (event.cookies.set doesn't work in custom responses)
-		headers['Set-Cookie'] = cookies.serialize('session', sessionCookie, {
+		setCookie = cookies.serialize('session', sessionCookie, {
 			path: '/',
-			maxAge: days * 24 * 60 * 60 * 24,
+			maxAge: days * 24 * 60 * 60,
 			sameSite: 'lax'
 		});
 	} else {
 		// delete session cookie
-		headers['Set-Cookie'] = cookies.serialize('session', '', {
+		setCookie = cookies.serialize('session', '', {
 			path: '/',
 			maxAge: 0
 		});
 	}
-	return new Response('ok', { headers });
+	return new Response('ok', {
+		headers: {
+			'Set-Cookie': setCookie
+		}
+	});
 }

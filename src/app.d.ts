@@ -18,7 +18,7 @@ declare global {
 		}
 		// interface PageState {}
 		interface Platform {
-			env?: EnV;
+			env?: Env;
 		}
 	}
 }
