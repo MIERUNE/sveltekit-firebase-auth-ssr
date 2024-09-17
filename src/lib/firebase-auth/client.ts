@@ -17,14 +17,8 @@ let redirectResultPromise: Promise<UserCredential | null>;
 export function setupAuthClient() {
 	const auth = getAuth();
 
-	// リダイレクト方式によるサインインの結果があれば処理する
-	redirectResultPromise = getRedirectResult(auth);
-	redirectResultPromise.then(async (result) => {
-		if (result) {
-			await updateSession(await result.user.getIdToken());
-			invalidate('auth:session');
-		}
-	});
+	// リダイレクト方式によるサインイン結果を処理するハンドラをセットする
+	resetRedirectResultHandler();
 
 	// idToken が変わったらセッションクッキーを更新する
 	auth.onIdTokenChanged(async (user) => {
@@ -64,6 +58,7 @@ export async function signOut() {
 	await updateSession(undefined);
 	invalidate('auth:session');
 	await getAuth().signOut();
+	resetRedirectResultHandler();
 }
 
 async function updateSession(idToken: string | undefined) {
@@ -71,5 +66,15 @@ async function updateSession(idToken: string | undefined) {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ idToken })
+	});
+}
+
+function resetRedirectResultHandler() {
+	redirectResultPromise = getRedirectResult(getAuth());
+	redirectResultPromise.then(async (result) => {
+		if (result) {
+			await updateSession(await result.user.getIdToken());
+			invalidate('auth:session');
+		}
 	});
 }
