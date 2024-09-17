@@ -61,12 +61,18 @@ export async function signOut() {
 	resetRedirectResultHandler();
 }
 
+let previousIdToken: string | undefined = undefined;
+
 async function updateSession(idToken: string | undefined) {
+	if (idToken === previousIdToken) {
+		return;
+	}
 	await fetch('/session', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ idToken })
 	});
+	previousIdToken = idToken;
 }
 
 function resetRedirectResultHandler() {

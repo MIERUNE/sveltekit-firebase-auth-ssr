@@ -27,8 +27,7 @@ export function createAuthHook({
 	projectId,
 	serviceAccountCredential,
 	tokenToUser,
-	keyStore: keyStoreMaker,
-	guardPathPattern: guardPath
+	keyStore: keyStoreMaker
 }: AuthHookOptions): Handle {
 	return async ({ event, resolve }) => {
 		const auth = getAuth(projectId, keyStoreMaker(event.platform), serviceAccountCredential);
@@ -57,14 +56,7 @@ export function createAuthHook({
 			}
 		}
 
-		// Auth guard
 		const currentUser = event.locals.currentUser;
-		if (!currentUser && guardPath) {
-			const path = event.url.pathname;
-			if (path.match(guardPath)) {
-				redirect(303, '/login?next=' + encodeURIComponent(event.url.pathname));
-			}
-		}
 		if (currentUser && event.url.pathname === '/login') {
 			const next = event.url.searchParams.get('next');
 			const url = next ? decodeURIComponent(next) : '/';

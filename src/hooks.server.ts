@@ -27,7 +27,6 @@ export const handle = sequence(
 				email: decodedToken.email,
 				name: decodedToken.name
 			};
-		},
-		guardPathPattern: /^\/(private|shop)(\/.*)?/
+		}
 	})
 );
