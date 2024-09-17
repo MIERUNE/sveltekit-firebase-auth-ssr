@@ -30,7 +30,7 @@ export const authMiddleware = createMiddleware(async (c, next) => {
 	if (sessionCookie) {
 		const kv = c.env?.KV;
 		const keyStore = kv ? WorkersKVStoreSingle.getOrInitialize('pubkeys', kv) : memKeyStore;
-		const auth = getAuth(PUBLIC_FIREBASE_PROJECT_ID, serviceAccountCredential, keyStore);
+		const auth = getAuth(PUBLIC_FIREBASE_PROJECT_ID, keyStore, serviceAccountCredential);
 
 		try {
 			const idToken = await auth.verifySessionCookie(sessionCookie, false);

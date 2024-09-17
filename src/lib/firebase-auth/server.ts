@@ -14,7 +14,7 @@ export {
 
 export type AuthHookOptions = {
 	projectId: string;
-	serviceAccountCredential: ServiceAccountCredential;
+	serviceAccountCredential?: ServiceAccountCredential;
 	keyStore: (platform: Readonly<App.Platform> | undefined) => KeyStorer;
 	tokenToUser: (decodedToken: FirebaseIdToken) => Promise<App.Locals['currentUser']>;
 	guardPathPattern?: RegExp;
@@ -31,7 +31,7 @@ export function createAuthHook({
 	guardPathPattern: guardPath
 }: AuthHookOptions): Handle {
 	return async ({ event, resolve }) => {
-		const auth = getAuth(projectId, serviceAccountCredential, keyStoreMaker(event.platform));
+		const auth = getAuth(projectId, keyStoreMaker(event.platform), serviceAccountCredential);
 		const { request, cookies, fetch } = event;
 
 		if (event.url.pathname.startsWith('/__/auth/')) {
@@ -76,8 +76,8 @@ export function createAuthHook({
 
 export function getAuth(
 	projectId: string,
-	credential: ServiceAccountCredential,
-	keyStore: KeyStorer
+	keyStore: KeyStorer,
+	credential?: ServiceAccountCredential
 ) {
 	return Auth.getOrInitialize(projectId, keyStore, credential);
 }
