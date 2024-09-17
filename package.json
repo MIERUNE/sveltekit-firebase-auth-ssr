@@ -1,7 +1,6 @@
 {
 	"name": "@mierune/sveltekit-firebase-auth-ssr",
-	"version": "0.0.1",
-	"private": true,
+	"version": "0.0.0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
