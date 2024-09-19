@@ -11,10 +11,12 @@ if (location.protocol === 'https:' && allowedAuthDomains.includes(location.host)
 	authDomain = location.host;
 }
 
+// Firebase の公式クライアントの初期化
 initializeApp({
 	apiKey: PUBLIC_FIREBASE_API_KEY,
 	authDomain,
 	projectId: PUBLIC_FIREBASE_PROJECT_ID
 });
 
+// 認証ライブラリのセットアップ
 setupAuthClient();
