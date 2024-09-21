@@ -4,7 +4,7 @@ import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
 import {
 	getAuth,
-	InMemoryKeyStore,
+	InMemoryStore,
 	ServiceAccountCredential,
 	WorkersKVStoreSingle
 } from '$lib/firebase-auth/server';
@@ -23,7 +23,7 @@ export interface AuthVariables {
 	currentUser?: CurrentUser;
 }
 
-const memKeyStore = new InMemoryKeyStore();
+const memKeyStore = new InMemoryStore();
 
 export const authMiddleware = createMiddleware(async (c, next) => {
 	const sessionCookie = getCookie(c, 'session');

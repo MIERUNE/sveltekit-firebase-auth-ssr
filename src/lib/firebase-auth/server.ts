@@ -8,6 +8,7 @@ import {
 } from 'firebase-auth-cloudflare-workers-x509';
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
 export {
+	InMemoryStore,
 	type FirebaseIdToken,
 	ServiceAccountCredential,
 	WorkersKVStoreSingle
@@ -70,23 +71,6 @@ export function getAuth(
 	credential?: ServiceAccountCredential
 ) {
 	return Auth.getOrInitialize(projectId, keyStore, credential);
-}
-
-// Cloudflare 以外の環境ではメモリに公開鍵をキャッシュする
-export class InMemoryKeyStore implements KeyStorer {
-	private val: string | null = null;
-	private expireAt: number = 0;
-
-	async get() {
-		if (Date.now() > this.expireAt) {
-			this.val = null;
-		}
-		return this.val ? JSON.parse(this.val) : null;
-	}
-	async put(value: string, expirationTtl: number) {
-		this.expireAt = Date.now() + expirationTtl * 1000;
-		this.val = value;
-	}
 }
 
 // ref: "Option 3: Proxy auth requests to firebaseapp.com"

@@ -1,6 +1,6 @@
 {
 	"name": "@mierune/sveltekit-firebase-auth-ssr",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -31,7 +31,7 @@
 		"svelte": "^4.0.0 || ^5.0.0 || ^5.0.0-next",
 		"@sveltejs/kit": "^2.5.27",
 		"firebase": "^10.13.1",
-		"firebase-auth-cloudflare-workers-x509": "^2.0.8"
+		"firebase-auth-cloudflare-workers-x509": "^2.0.9"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240903.0",

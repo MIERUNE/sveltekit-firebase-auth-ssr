@@ -3,14 +3,14 @@ import {
 	createAuthHook,
 	ServiceAccountCredential,
 	WorkersKVStoreSingle,
-	InMemoryKeyStore
+	InMemoryStore
 } from '$lib/firebase-auth/server';
 
 import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
 import { env } from '$env/dynamic/private';
 
 const serviceAccountCredential = new ServiceAccountCredential(env.GOOGLE_SERVICE_ACCOUNT_KEY);
-const memKeyStore = new InMemoryKeyStore();
+const memKeyStore = new InMemoryStore();
 
 export const handle = sequence(
 	createAuthHook({
