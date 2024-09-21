@@ -10,9 +10,9 @@ import {
 } from '$lib/firebase-auth/server';
 
 import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
-import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
-const serviceAccountCredential = new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY);
+const serviceAccountCredential = new ServiceAccountCredential(env.GOOGLE_SERVICE_ACCOUNT_KEY);
 
 export type CurrentUser = {
 	uid: string;

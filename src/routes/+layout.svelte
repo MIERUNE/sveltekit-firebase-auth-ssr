@@ -22,13 +22,13 @@
 	<li><a href="/">Home</a></li>
 	<li><a href="/private">Private</a></li>
 	<li><a href="/shop">Shop</a></li>
-	{#if data.currentUser === undefined}
+	{#if data.currentIdToken === undefined}
 		<li><a href="/login">Login</a></li>
 	{/if}
 </ul>
 
 <p>
-	{#if data.currentUser !== undefined}
+	{#if data.currentIdToken !== undefined}
 		<code>{JSON.stringify(data.currentUser)}</code>
 		<button onclick={signOut} disabled={data.currentUser === undefined}>Logout</button>
 	{/if}

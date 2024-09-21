@@ -2,10 +2,10 @@ import { redirect } from '@sveltejs/kit';
 import { stripe } from '$lib/stripe/stripe';
 
 export async function GET({ url, cookies, locals }) {
-	if (!locals.currentUser) {
+	if (!locals.currentIdToken) {
 		redirect(303, '/');
 	}
-	const email = locals.currentUser.email;
+	const email = locals.currentIdToken.email || '';
 
 	// キケン！
 	// Cookieを使ってStripeの顧客IDを保持する
@@ -23,7 +23,7 @@ export async function GET({ url, cookies, locals }) {
 	}
 
 	const billingPortalSession = await stripe.billingPortal.sessions.create({
-		// configuration: bpc.id, // Billing Portal をカスタムする場合
+		// configuration: bpc.id, // Billing Portal をカスタムする場合に使用
 		customer: customerId,
 		return_url: url.origin + '/'
 	});

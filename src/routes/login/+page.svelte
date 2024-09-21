@@ -16,7 +16,7 @@
 		{#if $page.url.searchParams.get('next')}
 			<p>ログインが必要です</p>
 		{/if}
-		<button onclick={signInWithGoogle} disabled={data.currentUser !== undefined}
+		<button onclick={signInWithGoogle} disabled={data.currentIdToken !== undefined}
 			>Sign-in with Google</button
 		>
 	{/if}

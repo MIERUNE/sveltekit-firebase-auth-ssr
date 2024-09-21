@@ -1,4 +1,5 @@
 import type { BasicPrivateUserInfo } from './lib/user';
+import type { FirebaseIdToken } from 'firebase-auth-cloudflare-workers-x509';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -11,9 +12,10 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			currentUser?: BasicPrivateUserInfo;
+			currentIdToken?: FirebaseIdToken;
 		}
 		interface PageData {
+			currentIdToken?: FirebaseIdToken;
 			currentUser?: BasicPrivateUserInfo;
 		}
 		// interface PageState {}

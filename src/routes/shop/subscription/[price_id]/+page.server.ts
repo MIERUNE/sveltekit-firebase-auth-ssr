@@ -2,10 +2,10 @@ import { stripe } from '$lib/stripe/stripe';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ url, cookies, params, locals }) {
-	if (!locals.currentUser) {
+	if (!locals.currentIdToken) {
 		redirect(303, '/');
 	}
-	const email = locals.currentUser.email;
+	const email = locals.currentIdToken.email || '';
 
 	// マネしちゃだめ！ URL から価格IDを取得する
 	const priceId = params.price_id;

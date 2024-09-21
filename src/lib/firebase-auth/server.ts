@@ -8,6 +8,7 @@ import {
 } from 'firebase-auth-cloudflare-workers-x509';
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
 export {
+	type FirebaseIdToken,
 	ServiceAccountCredential,
 	WorkersKVStoreSingle
 } from 'firebase-auth-cloudflare-workers-x509';
@@ -16,7 +17,6 @@ export type AuthHookOptions = {
 	projectId: string;
 	serviceAccountCredential?: ServiceAccountCredential;
 	keyStore: (platform: Readonly<App.Platform> | undefined) => KeyStorer;
-	tokenToUser: (decodedToken: FirebaseIdToken) => Promise<App.Locals['currentUser']>;
 	guardPathPattern?: RegExp;
 };
 
@@ -26,7 +26,6 @@ export type AuthHookOptions = {
 export function createAuthHook({
 	projectId,
 	serviceAccountCredential,
-	tokenToUser,
 	keyStore: keyStoreMaker
 }: AuthHookOptions): Handle {
 	return async ({ event, resolve }) => {
@@ -45,19 +44,18 @@ export function createAuthHook({
 		// Verify session cookie
 		const session = cookies.get('session');
 		if (session) {
-			let decodedToken: FirebaseIdToken | null = null;
+			let decodedToken: FirebaseIdToken | undefined = undefined;
 			try {
 				decodedToken = await auth.verifySessionCookie(session, false);
 			} catch {
 				// ignore
 			}
 			if (decodedToken) {
-				event.locals.currentUser = await tokenToUser(decodedToken);
+				event.locals.currentIdToken = decodedToken;
 			}
 		}
 
-		const currentUser = event.locals.currentUser;
-		if (currentUser && event.url.pathname === '/login') {
+		if (event.locals.currentIdToken && event.url.pathname === '/login') {
 			const next = event.url.searchParams.get('next');
 			const url = next ? decodeURIComponent(next) : '/';
 			redirect(303, url);

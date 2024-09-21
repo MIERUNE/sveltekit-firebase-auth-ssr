@@ -4,7 +4,7 @@
 
 SvelteKit を SSR で使う場合に、Firebase Authentication による認証を組みこむためのパッケージです。
 
-Node.js 環境だけでなく、Cloudflare Pages/Workers でも動作するように実装されています。
+Node.js 環境だけでなく、Cloudflare Pages/Workers 単独でも動作するように実装されています。
 
 ## Usage
 

@@ -7,9 +7,9 @@ import {
 } from '$lib/firebase-auth/server';
 
 import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
-import { GOOGLE_SERVICE_ACCOUNT_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
-const serviceAccountCredential = new ServiceAccountCredential(GOOGLE_SERVICE_ACCOUNT_KEY);
+const serviceAccountCredential = new ServiceAccountCredential(env.GOOGLE_SERVICE_ACCOUNT_KEY);
 const memKeyStore = new InMemoryKeyStore();
 
 export const handle = sequence(
@@ -17,16 +17,9 @@ export const handle = sequence(
 		projectId: PUBLIC_FIREBASE_PROJECT_ID,
 		serviceAccountCredential,
 		keyStore: (platform) => {
-			const kv = platform?.env?.KV;
-			return kv ? WorkersKVStoreSingle.getOrInitialize('pubkeys', kv) : memKeyStore;
-		},
-		tokenToUser: async (decodedToken) => {
-			// トークンをもとにユーザ情報を取得して返す
-			return {
-				uid: decodedToken.uid,
-				email: decodedToken.email,
-				name: decodedToken.name
-			};
+			return platform?.env?.KV
+				? WorkersKVStoreSingle.getOrInitialize('pubkeys', platform?.env?.KV)
+				: memKeyStore;
 		}
 	})
 );
