@@ -1,6 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import {
-	createAuthHook,
+	createAuthHandle,
 	ServiceAccountCredential,
 	WorkersKVStoreSingle,
 	InMemoryStore
@@ -13,7 +13,7 @@ const serviceAccountCredential = new ServiceAccountCredential(env.GOOGLE_SERVICE
 const memKeyStore = new InMemoryStore();
 
 export const handle = sequence(
-	createAuthHook({
+	createAuthHandle({
 		projectId: PUBLIC_FIREBASE_PROJECT_ID,
 		serviceAccountCredential,
 		keyStore: (platform) => {

@@ -2,7 +2,7 @@
 
 ![NPM Version](https://img.shields.io/npm/v/%40mierune%2Fsveltekit-firebase-auth-ssr)
 
-SvelteKit を SSR で使う場合に、Firebase Authentication による認証を組みこむためのパッケージです。
+SvelteKit に Firebase Authentication による認証を組みこむためのパッケージです。Server-Side Rendering (SSR) 専用です。
 
 Node.js 環境だけでなく、Cloudflare Pages/Workers 単独でも動作するように実装されています。
 

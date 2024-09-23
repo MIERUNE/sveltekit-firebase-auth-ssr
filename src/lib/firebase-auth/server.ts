@@ -14,7 +14,7 @@ export {
 	WorkersKVStoreSingle
 } from 'firebase-auth-cloudflare-workers-x509';
 
-export type AuthHookOptions = {
+export type AuthHandleOptions = {
 	projectId: string;
 	serviceAccountCredential?: ServiceAccountCredential;
 	keyStore: (platform: Readonly<App.Platform> | undefined) => KeyStorer;
@@ -24,11 +24,11 @@ export type AuthHookOptions = {
 /**
  * 認証ミドルウェア
  */
-export function createAuthHook({
+export function createAuthHandle({
 	projectId,
 	serviceAccountCredential,
 	keyStore: keyStoreMaker
-}: AuthHookOptions): Handle {
+}: AuthHandleOptions): Handle {
 	return async ({ event, resolve }) => {
 		const auth = getAuth(projectId, keyStoreMaker(event.platform), serviceAccountCredential);
 		const { request, cookies, fetch } = event;
