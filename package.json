@@ -11,6 +11,7 @@
 		"test": "npm run test:integration && npm run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"start-firebase-emulator": "firebase emulators:start --project fukada-delete-me",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
@@ -28,10 +29,10 @@
 		"!dist/**/*.spec.*"
 	],
 	"peerDependencies": {
-		"svelte": "^4.0.0 || ^5.0.0 || ^5.0.0-next",
-		"@sveltejs/kit": "^2.5.27",
+		"@sveltejs/kit": "^2.6.1",
 		"firebase": "^10.13.1",
-		"firebase-auth-cloudflare-workers-x509": "^2.0.9"
+		"firebase-auth-cloudflare-workers-x509": "^2.0.9",
+		"svelte": "^4.0.0 || ^5.0.0 || ^5.0.0-next"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240903.0",
@@ -45,6 +46,7 @@
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
+		"firebase-tools": "^13.20.0",
 		"globals": "^15.0.0",
 		"hono": "^4.5.11",
 		"prettier": "^3.1.1",
