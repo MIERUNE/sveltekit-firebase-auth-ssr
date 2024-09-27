@@ -4,7 +4,13 @@
 
 SvelteKit に Firebase Authentication による認証を組みこむためのパッケージです。Server-Side Rendering (SSR) 専用です。
 
-Node.js 環境だけでなく、Cloudflare Pages/Workers 単独でも動作するように実装されています。
+Node.js 環境だけでなく、Cloudflare Pages/Workers でも動作するように実装されています ([MIERUNE/firebase-auth-cloudflare-workers-x509](https://github.com/MIERUNE/firebase-auth-cloudflare-workers-x509))。
+
+## Installation
+
+```bash
+npm install -D @mierune/sveltekit-firebase-auth-ssr
+```
 
 ## Usage
 
