@@ -6,6 +6,8 @@ SvelteKit に Firebase Authentication による認証を組みこむためのパ
 
 Node.js 環境だけでなく、Cloudflare Pages/Workers でも動作するように実装されています ([MIERUNE/firebase-auth-cloudflare-workers-x509](https://github.com/MIERUNE/firebase-auth-cloudflare-workers-x509))。
 
+デモ： https://sveltekit-firebaseauth-ssr-stripe-demo.pages.dev/
+
 ## Installation
 
 ```bash
