@@ -102,7 +102,6 @@ async function handleSessionEndpoint(request: Request, auth: Auth, cookies: Cook
 	const data = await request.json().catch(() => {
 		error(400, { message: 'Invalid JSON' });
 	});
-	console.log('session', data);
 	const idToken = (data as { idToken?: string }).idToken;
 	const days = 14; // min: 5 min, max: 14 days
 	let setCookie: string;

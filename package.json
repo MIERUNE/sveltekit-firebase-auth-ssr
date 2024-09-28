@@ -1,6 +1,6 @@
 {
 	"name": "@mierune/sveltekit-firebase-auth-ssr",
-	"version": "0.0.11",
+	"version": "0.0.15",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -61,9 +61,6 @@
 		"typescript-eslint": "^8.0.0-alpha.20",
 		"vite": "^5.0.3",
 		"vitest": "^2.0.5"
-	},
-	"optionalDependencies": {
-		"@rollup/rollup-linux-x64-gnu": "^4.22.5"
 	},
 	"overrides": {
 		"svelte-stripe": {

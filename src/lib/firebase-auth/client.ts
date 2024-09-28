@@ -12,16 +12,15 @@ import {
 } from 'firebase/auth';
 import { invalidate } from '$app/navigation';
 import { getApp } from 'firebase/app';
-import { env } from '$env/dynamic/public';
 
 let redirectResultPromise: Promise<UserCredential | null>;
 
-export function setupAuthClient() {
+export function setupAuthClient(options: { emulatorHost?: string }) {
 	const auth = getAuth();
 
 	// PUBLIC_FIREBASE_AUTH_EMULATOR_HOST をセットすることで Firebase Auth Emulator を利用できる
-	if (env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST) {
-		connectAuthEmulator(auth, `http://${env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST}`);
+	if (options.emulatorHost) {
+		connectAuthEmulator(auth, `http://${options.emulatorHost}`);
 	}
 
 	// リダイレクト方式によるサインイン結果を処理するハンドラをセットする
