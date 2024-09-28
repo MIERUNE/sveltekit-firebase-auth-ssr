@@ -7,6 +7,8 @@ import {
 	type KeyStorer
 } from 'firebase-auth-cloudflare-workers-x509';
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
+import { env } from '$env/dynamic/public';
+
 export {
 	InMemoryStore,
 	type FirebaseIdToken,
@@ -19,6 +21,11 @@ export type AuthHandleOptions = {
 	serviceAccountCredential?: ServiceAccountCredential;
 	keyStore: (platform: Readonly<App.Platform> | undefined) => KeyStorer;
 	guardPathPattern?: RegExp;
+};
+
+// PUBLIC_FIREBASE_AUTH_EMULATOR_HOST をセットすることで Firebase Auth Emulator を利用できる
+const emulatorEnv = {
+	FIREBASE_AUTH_EMULATOR_HOST: env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST
 };
 
 /**
@@ -47,7 +54,7 @@ export function createAuthHandle({
 		if (session) {
 			let decodedToken: FirebaseIdToken | undefined = undefined;
 			try {
-				decodedToken = await auth.verifySessionCookie(session, false);
+				decodedToken = await auth.verifySessionCookie(session, false, emulatorEnv);
 			} catch {
 				// ignore
 			}
@@ -95,13 +102,18 @@ async function handleSessionEndpoint(request: Request, auth: Auth, cookies: Cook
 	const data = await request.json().catch(() => {
 		error(400, { message: 'Invalid JSON' });
 	});
+	console.log('session', data);
 	const idToken = (data as { idToken?: string }).idToken;
 	const days = 14; // min: 5 min, max: 14 days
 	let setCookie: string;
 	if (idToken) {
-		const sessionCookie = await auth.createSessionCookie(idToken, {
-			expiresIn: days * 24 * 60 * 60 * 1000
-		});
+		const sessionCookie = await auth.createSessionCookie(
+			idToken,
+			{
+				expiresIn: days * 24 * 60 * 60 * 1000
+			},
+			emulatorEnv
+		);
 		// set session cookie
 		// (event.cookies.set doesn't work in custom responses)
 		setCookie = cookies.serialize('session', sessionCookie, {

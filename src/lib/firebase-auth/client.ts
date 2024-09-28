@@ -6,16 +6,23 @@ import {
 	signInWithPopup,
 	signInWithRedirect,
 	getRedirectResult,
+	connectAuthEmulator,
 	type UserCredential,
 	type AuthProvider
 } from 'firebase/auth';
 import { invalidate } from '$app/navigation';
 import { getApp } from 'firebase/app';
+import { env } from '$env/dynamic/public';
 
 let redirectResultPromise: Promise<UserCredential | null>;
 
 export function setupAuthClient() {
 	const auth = getAuth();
+
+	// PUBLIC_FIREBASE_AUTH_EMULATOR_HOST をセットすることで Firebase Auth Emulator を利用できる
+	if (env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST) {
+		connectAuthEmulator(auth, `http://${env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST}`);
+	}
 
 	// リダイレクト方式によるサインイン結果を処理するハンドラをセットする
 	resetRedirectResultHandler();
