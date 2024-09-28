@@ -37,6 +37,10 @@ export function createAuthHandle({
 	keyStore: keyStoreMaker
 }: AuthHandleOptions): Handle {
 	return async ({ event, resolve }) => {
+		if (!serviceAccountCredential && !emulatorEnv.FIREBASE_AUTH_EMULATOR_HOST) {
+			console.error('FIREBASE_SERVICE_ACCOUNT_KEY is not set. Authentication will not work.');
+		}
+
 		const auth = getAuth(projectId, keyStoreMaker(event.platform), serviceAccountCredential);
 		const { request, cookies, fetch } = event;
 
