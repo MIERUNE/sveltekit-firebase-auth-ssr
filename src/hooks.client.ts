@@ -23,4 +23,4 @@ initializeApp({
 });
 
 // 認証ライブラリのセットアップ
-setupAuthClient(PUBLIC_FIREBASE_AUTH_EMULATOR_HOST);
+setupAuthClient({ emulatorHost: PUBLIC_FIREBASE_AUTH_EMULATOR_HOST });

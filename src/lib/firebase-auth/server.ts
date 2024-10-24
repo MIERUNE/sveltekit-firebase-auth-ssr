@@ -2,9 +2,9 @@
 
 import {
 	Auth,
-	ServiceAccountCredential,
 	type FirebaseIdToken,
-	type KeyStorer
+	type KeyStorer,
+	type Credential
 } from 'firebase-auth-cloudflare-workers-x509';
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
@@ -18,7 +18,7 @@ export {
 
 export type AuthHandleOptions = {
 	projectId: string;
-	serviceAccountCredential?: ServiceAccountCredential;
+	serviceAccountCredential?: Credential;
 	keyStore: (platform: Readonly<App.Platform> | undefined) => KeyStorer;
 	guardPathPattern?: RegExp;
 };
@@ -27,6 +27,15 @@ export type AuthHandleOptions = {
 const emulatorEnv = {
 	FIREBASE_AUTH_EMULATOR_HOST: env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST
 };
+
+export class NopCredential implements Credential {
+	async getAccessToken() {
+		return {
+			access_token: 'owner',
+			expires_in: 9 * 3600
+		};
+	}
+}
 
 /**
  * 認証ミドルウェア
@@ -37,8 +46,12 @@ export function createAuthHandle({
 	keyStore: keyStoreMaker
 }: AuthHandleOptions): Handle {
 	return async ({ event, resolve }) => {
-		if (!serviceAccountCredential && !emulatorEnv.FIREBASE_AUTH_EMULATOR_HOST) {
-			console.error('FIREBASE_SERVICE_ACCOUNT_KEY is not set. Authentication will not work.');
+		if (!serviceAccountCredential) {
+			if (emulatorEnv.FIREBASE_AUTH_EMULATOR_HOST) {
+				serviceAccountCredential ||= new NopCredential();
+			} else {
+				console.error('service account credential is not set. Authentication will not work.');
+			}
 		}
 
 		const auth = getAuth(projectId, keyStoreMaker(event.platform), serviceAccountCredential);
@@ -76,11 +89,7 @@ export function createAuthHandle({
 	};
 }
 
-export function getAuth(
-	projectId: string,
-	keyStore: KeyStorer,
-	credential?: ServiceAccountCredential
-) {
+export function getAuth(projectId: string, keyStore: KeyStorer, credential?: Credential) {
 	return Auth.getOrInitialize(projectId, keyStore, credential);
 }
 
