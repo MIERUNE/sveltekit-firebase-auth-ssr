@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { signInWithGoogle, waitForRedirectResult } from '$lib/firebase-auth/client';
+	import { signInWithGoogle, signInWithTwitter, waitForRedirectResult } from '$lib/firebase-auth/client';
 	import { page } from '$app/stores';
 
 	const redirectResult = waitForRedirectResult();
@@ -18,6 +18,9 @@
 		{/if}
 		<button onclick={signInWithGoogle} disabled={data.currentIdToken !== undefined}
 			>Sign-in with Google</button
+		>
+		<button onclick={signInWithTwitter} disabled={data.currentIdToken !== undefined}
+			>Sign-in with Twitter</button
 		>
 	{/if}
 {/await}
