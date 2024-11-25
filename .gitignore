@@ -1,18 +1,17 @@
 node_modules
 
+dist/
+credentials.json
+
 # Output
 .output
+.vercel
 /.svelte-kit
 /build
-/dist
-.wrangler
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Log
-*.log
 
 # Env
 .env
@@ -23,5 +22,3 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-credentials.json
