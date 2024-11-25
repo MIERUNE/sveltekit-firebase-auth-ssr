@@ -48,7 +48,7 @@ export async function signInWithGoogle() {
 }
 
 export async function signInWithTwitter() {
-	const provider = new GoogleAuthProvider();
+	const provider = new TwitterAuthProvider();
 	await signInWithProvider(provider);
 }
 
