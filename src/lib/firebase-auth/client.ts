@@ -2,6 +2,7 @@
 
 import {
 	GoogleAuthProvider,
+	TwitterAuthProvider,
 	getAuth,
 	signInWithPopup,
 	signInWithRedirect,
@@ -43,6 +44,11 @@ export async function waitForRedirectResult() {
 
 export async function signInWithGoogle() {
 	const provider = new GoogleAuthProvider();
+	await signInWithProvider(provider);
+}
+
+export async function signInWithTwitter() {
+	const provider = new TwitterAuthProvider();
 	await signInWithProvider(provider);
 }
 
