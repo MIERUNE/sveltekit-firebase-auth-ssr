@@ -11,7 +11,7 @@ const app = new Hono<{ Bindings: Env; Variables: AuthVariables }>()
 	.get('/api/posts', async (c) => {
 		const currentUser = ensureUser(c);
 		const posts = Array.from({ length: 20 }, () => ({
-			title: '素晴しい記事',
+			title: 'Great Article',
 			author: currentUser.name
 		}));
 		return c.json(posts);
