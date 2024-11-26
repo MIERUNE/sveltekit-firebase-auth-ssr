@@ -14,6 +14,9 @@ import {
 import { invalidate } from '$app/navigation';
 import { getApp } from 'firebase/app';
 
+/** re-export the official firebase/auth for convenience */
+export * from 'firebase/auth';
+
 let redirectResultPromise: Promise<UserCredential | null>;
 
 export function setupAuthClient(options: { emulatorHost?: string }) {

@@ -1,6 +1,6 @@
 {
 	"name": "@mierune/sveltekit-firebase-auth-ssr",
-	"version": "0.0.19",
+	"version": "0.0.20",
 	"repository": {
 		"url": "https://github.com/MIERUNE/sveltekit-firebase-auth-ssr"
 	},
@@ -21,9 +21,13 @@
 		"test:unit": "vitest"
 	},
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+		"client": {
+			"types": "./dist/client.d.ts",
+			"svelte": "./dist/client.js"
+		},
+		"server": {
+			"types": "./dist/server.d.ts",
+			"svelte": "./dist/server.js"
 		}
 	},
 	"files": [

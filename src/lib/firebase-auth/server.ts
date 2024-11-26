@@ -6,6 +6,7 @@ import {
 	type KeyStorer,
 	type Credential
 } from 'firebase-auth-cloudflare-workers-x509';
+
 import { type Handle, redirect, error, type Cookies } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 
