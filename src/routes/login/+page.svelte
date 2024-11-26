@@ -18,7 +18,7 @@
 {:then result}
 	{#if !result}
 		{#if $page.url.searchParams.get('next')}
-			<p>ログインが必要です</p>
+			<p>You need to log in.</p>
 		{/if}
 		<button onclick={signInWithGoogle} disabled={data.currentIdToken !== undefined}
 			>Sign-in with Google</button

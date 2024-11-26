@@ -1,4 +1,4 @@
-// Firebase Authentication のサーバ側用のコード
+// Firebase Authentication for server-side
 
 import {
 	Auth,
@@ -23,7 +23,7 @@ export type AuthHandleOptions = {
 	guardPathPattern?: RegExp;
 };
 
-// PUBLIC_FIREBASE_AUTH_EMULATOR_HOST をセットすることで Firebase Auth Emulator を利用できる
+// You can use the Firebase Auth Emulator by setting PUBLIC_FIREBASE_AUTH_EMULATOR_HOST
 const emulatorEnv = {
 	FIREBASE_AUTH_EMULATOR_HOST: env.PUBLIC_FIREBASE_AUTH_EMULATOR_HOST
 };
@@ -38,7 +38,7 @@ export class NopCredential implements Credential {
 }
 
 /**
- * 認証ミドルウェア
+ * Create the authentication handle (middleware)
  */
 export function createAuthHandle({
 	projectId,
@@ -109,7 +109,7 @@ function proxyFirebaseAuthRequest(
 }
 
 /**
- * セッションクッキーを発行する
+ * handler for POST /session
  */
 async function handleSessionEndpoint(request: Request, auth: Auth, cookies: Cookies) {
 	const data = await request.json().catch(() => {

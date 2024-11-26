@@ -1,4 +1,4 @@
-// Firebase Authentication のブラウザ側用のコード
+// Firebase Authentication for client-side
 
 import {
 	GoogleAuthProvider,
@@ -19,15 +19,15 @@ let redirectResultPromise: Promise<UserCredential | null>;
 export function setupAuthClient(options: { emulatorHost?: string }) {
 	const auth = getAuth();
 
-	// PUBLIC_FIREBASE_AUTH_EMULATOR_HOST をセットすることで Firebase Auth Emulator を利用できる
+	// You can use the Firebase Auth Emulator by setting the emulatorHost option
 	if (options.emulatorHost) {
 		connectAuthEmulator(auth, `http://${options.emulatorHost}`);
 	}
 
-	// リダイレクト方式によるサインイン結果を処理するハンドラをセットする
+	// Set up the handler to process the sign-in result by redirect method
 	resetRedirectResultHandler();
 
-	// idToken が変わったらセッションクッキーを更新する
+	// Update the session cookie when the idToken changes
 	auth.onIdTokenChanged(async (user) => {
 		if (user) {
 			updateSession(await user.getIdToken());
@@ -36,17 +36,23 @@ export function setupAuthClient(options: { emulatorHost?: string }) {
 }
 
 /**
- * リダイレクト方式によるサインインの結果を待機する
+ * Wait for the result of sign-in by redirect method
  */
 export async function waitForRedirectResult() {
 	return redirectResultPromise;
 }
 
+/**
+ * Sign in with Google
+ */
 export async function signInWithGoogle() {
 	const provider = new GoogleAuthProvider();
 	await signInWithProvider(provider);
 }
 
+/**
+ * Sign in with Twitter
+ */
 export async function signInWithTwitter() {
 	const provider = new TwitterAuthProvider();
 	await signInWithProvider(provider);
@@ -56,16 +62,19 @@ export async function signInWithProvider(provider: AuthProvider, withRedirect = 
 	const auth = getAuth();
 	const app = getApp();
 	if (withRedirect && location.host === app.options.authDomain) {
-		// リダイレクト方式によるサインイン (モバイル環境などでのポップアップブロック対策)
+		// Sign-in with redirect (to prevent popup blocking especially on mobile)
 		signInWithRedirect(auth, provider);
 	} else {
-		// authDomain と location.host が異なる場合はポップアップ方式によるサインインにフォールバックする
+		// Fall back to sign-in by popup method if authDomain is different from location.host
 		const cred = await signInWithPopup(auth, provider);
 		await updateSession(await cred.user.getIdToken());
 		invalidate('auth:session');
 	}
 }
 
+/**
+ * Sign out
+ */
 export async function signOut() {
 	await updateSession(undefined);
 	invalidate('auth:session');
