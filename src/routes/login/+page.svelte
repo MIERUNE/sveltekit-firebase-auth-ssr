@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { signInWithGoogle, signInWithTwitter, waitForRedirectResult } from '$lib/firebase-auth/client';
+	import {
+		signInWithGoogle,
+		signInWithTwitter,
+		waitForRedirectResult
+	} from '$lib/firebase-auth/client';
 	import { page } from '$app/stores';
 
 	const redirectResult = waitForRedirectResult();

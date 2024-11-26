@@ -1,9 +1,9 @@
 {
 	"name": "@mierune/sveltekit-firebase-auth-ssr",
 	"version": "0.0.19",
-    "repository": {
-        "url": "https://github.com/MIERUNE/sveltekit-firebase-auth-ssr"
-    },
+	"repository": {
+		"url": "https://github.com/MIERUNE/sveltekit-firebase-auth-ssr"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",

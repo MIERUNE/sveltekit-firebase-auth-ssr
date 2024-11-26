@@ -18,16 +18,15 @@ npm install -D @mierune/sveltekit-firebase-auth-ssr
 
 ## Usage
 
-1.	**Prerequisites**:
-    - Project ID of the Firebase project
-    - API Key of the Firebase project
-    - Firebase Service Account Key (from Google Cloud)
-2.	**Add the necessary code to the following files**:
-    - `src/hooks.client.ts` (Example: TODO)
-    - `src/hooks.server.ts` (Example: TODO)
-    - `src/app.d.ts` (Example: TODO)
-    - `src/routes/+layout.server.ts` (Example: TODO)
-3.	**Implement sign-in and sign-out functionality** in your application. (Example: TODO)
-4.	Use the user information and implement database integration if needed.
-5.	Ensure that the required environment variables are set in the execution environment.
-
+1. **Prerequisites**:
+   - Project ID of the Firebase project
+   - API Key of the Firebase project
+   - Firebase Service Account Key (from Google Cloud)
+2. **Add the necessary code to the following files**:
+   - `src/hooks.client.ts` (Example: TODO)
+   - `src/hooks.server.ts` (Example: TODO)
+   - `src/app.d.ts` (Example: TODO)
+   - `src/routes/+layout.server.ts` (Example: TODO)
+3. **Implement sign-in and sign-out functionality** in your application. (Example: TODO)
+4. Use the user information and implement database integration if needed.
+5. Ensure that the required environment variables are set in the execution environment.
