@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { FirebaseError } from 'firebase/app';
-	import { sendEmailVerification } from 'firebase/auth';
+	import { getAuth, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
 	import {
 		signInWithGoogle,
 		waitForRedirectResult,
@@ -36,6 +36,17 @@
 				errorCode = error.code;
 			}
 		}
+	}
+
+	async function resetPassword() {
+		if (email !== '') {
+			const auth = getAuth();
+			await sendPasswordResetEmail(auth, email, {
+				url: $page.url.origin + '/login'
+			});
+			alert('Password reset email sent.');
+		}
+		email = '';
 	}
 </script>
 
@@ -83,6 +94,7 @@
 			<p>
 				<button onclick={signInWithPassword}>Sign-In</button>
 				<button onclick={signUpWithPassword}>Sign-Up</button>
+				<button onclick={resetPassword}>Reset Password</button>
 			</p>
 		</div>
 	{/if}
