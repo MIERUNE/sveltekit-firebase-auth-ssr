@@ -14,9 +14,9 @@ Menu：
 	</li>
 	<li>
 		<a href="/shop/subscription/price_1PkepxLtNIgQdVME3rIN4nel"
-			>Subscription: Monthly MIERUNE (Ultimate Edition)</a
+			>Subscription: Mouthly MIERUNE (Ultimate Edition)</a
 		>
 	</li>
 </ul>
 
-<p><a href="/shop/billing-portal">Go to Stripe Customer Portal</a></p>
+<p><a href="/shop/billing-portal">Go to the Stripe Customer Portal</a></p>

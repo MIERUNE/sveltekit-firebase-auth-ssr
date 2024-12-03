@@ -30,3 +30,11 @@ npm install -D @mierune/sveltekit-firebase-auth-ssr
 3. **Implement sign-in and sign-out functionality** in your application. (Example: TODO)
 4. Use the user information and implement database integration if needed.
 5. Ensure that the required environment variables are set in the execution environment.
+
+
+## Development
+
+```bash
+direnv allow
+pnpm dev-in-emulator
+```

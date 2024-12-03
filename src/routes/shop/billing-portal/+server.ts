@@ -3,7 +3,7 @@ import { stripe } from '$lib/stripe/stripe';
 
 export async function GET({ url, cookies, locals }) {
 	if (!locals.currentIdToken) {
-		redirect(303, '/');
+		redirect(307, '/');
 	}
 	const email = locals.currentIdToken.email || '';
 
@@ -19,7 +19,7 @@ export async function GET({ url, cookies, locals }) {
 	}
 
 	if (customerId === undefined) {
-		throw redirect(303, '/');
+		throw redirect(307, '/');
 	}
 
 	const billingPortalSession = await stripe.billingPortal.sessions.create({
@@ -27,5 +27,5 @@ export async function GET({ url, cookies, locals }) {
 		customer: customerId,
 		return_url: url.origin + '/'
 	});
-	throw redirect(302, billingPortalSession.url);
+	throw redirect(307, billingPortalSession.url);
 }

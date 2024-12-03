@@ -60,22 +60,10 @@ export async function signInWithTwitter() {
 	await signInWithProvider(provider);
 }
 
-// export async function refreshSession() {
-// 	const auth = getAuth();
-// 	await auth.authStateReady();
-// 	if (auth.currentUser) {
-// 		const idToken = await auth.currentUser.getIdToken(true);
-// 		console.log(auth.currentUser.emailVerified, idToken);
-// 		await updateSession(idToken);
-// 		invalidate('auth:session');
-// 	}
-// }
-
 export async function signInWithEmailAndPassword(email: string, password: string) {
 	const auth = getAuth();
 	const cred = await _signInWithEmailAndPassword(auth, email, password);
 	await updateSession(await cred.user.getIdToken());
-	invalidate('auth:session');
 	return cred;
 }
 
@@ -83,7 +71,6 @@ export async function createUserWithEmailAndPassword(email: string, password: st
 	const auth = getAuth();
 	const cred = await _createUserWithEmailAndPassword(auth, email, password);
 	await updateSession(await cred.user.getIdToken());
-	invalidate('auth:session');
 	return cred;
 }
 
@@ -97,7 +84,6 @@ export async function signInWithProvider(provider: AuthProvider, withRedirect = 
 		// Fall back to sign-in by popup method if authDomain is different from location.host
 		const cred = await signInWithPopup(auth, provider);
 		await updateSession(await cred.user.getIdToken());
-		invalidate('auth:session');
 	}
 }
 
@@ -122,9 +108,7 @@ export async function updateSession(idToken: string | undefined) {
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ idToken })
 	});
-	if (previousIdToken) {
-		invalidate('auth:session');
-	}
+	invalidate('auth:session');
 	previousIdToken = idToken;
 }
 
