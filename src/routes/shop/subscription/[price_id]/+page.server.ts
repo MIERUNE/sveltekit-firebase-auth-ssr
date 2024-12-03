@@ -3,15 +3,16 @@ import { redirect } from '@sveltejs/kit';
 
 export async function load({ url, cookies, params, locals }) {
 	if (!locals.currentIdToken) {
-		redirect(303, '/');
+		redirect(307, '/');
 	}
 	const email = locals.currentIdToken.email || '';
 
-	// マネしちゃだめ！ URL から価格IDを取得する
+	// DO NOT DO THIS IN PRODUCTION!!!
+	// DO NOT DO THIS IN PRODUCTION!!!
 	const priceId = params.price_id;
 
-	// マネしちゃだめ！
-	// 永続化層がないので、 Cookieを使ってStripeの顧客IDを保持しておく
+	// DO NOT DO THIS IN PRODUCTION!!!
+	// DO NOT DO THIS IN PRODUCTION!!!
 	let customerId = cookies.get('customer_id');
 	if (!customerId) {
 		const customer = await stripe.customers.create({

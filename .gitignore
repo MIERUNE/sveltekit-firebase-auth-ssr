@@ -7,6 +7,9 @@ node_modules
 /dist
 .wrangler
 
+# npm
+package-lock.json
+
 # OS
 .DS_Store
 Thumbs.db

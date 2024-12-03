@@ -12,7 +12,7 @@ const app = new Hono<{ Bindings: Env; Variables: AuthVariables }>()
 		const currentUser = ensureUser(c);
 		const posts = Array.from({ length: 20 }, () => ({
 			title: 'Great Article',
-			author: currentUser.name
+			author: currentUser.name ?? 'Unknown'
 		}));
 		return c.json(posts);
 	});
