@@ -99,7 +99,7 @@ export async function signOut() {
 
 let previousIdToken: string | undefined = undefined;
 
-async function updateSession(idToken: string | undefined) {
+export async function updateSession(idToken: string | undefined) {
 	if (idToken === previousIdToken) {
 		return;
 	}

@@ -3,7 +3,7 @@
 
 <h1>Private Shop</h1>
 
-Menu:
+Menu：
 
 <ul>
 	<li><a href="/shop/payment">MIERUNE Dorayaki</a></li>
