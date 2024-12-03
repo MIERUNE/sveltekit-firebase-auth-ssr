@@ -2,6 +2,8 @@
 	import type { Snippet } from 'svelte';
 	import { signOut } from '$lib/firebase-auth/client';
 	import type { PageData } from './$types';
+	import { getAuth, sendEmailVerification } from 'firebase/auth';
+	import { page } from '$app/stores';
 
 	let {
 		data,
@@ -10,6 +12,13 @@
 		data: PageData;
 		children: Snippet;
 	} = $props();
+
+	async function _sendEmailVerification() {
+		const auth = getAuth();
+		if (auth.currentUser) {
+			await sendEmailVerification(auth.currentUser, { url: $page.url.origin + '/verify_email' });
+		}
+	}
 </script>
 
 <p>
@@ -27,11 +36,18 @@
 	{/if}
 </ul>
 
-<p>
-	{#if data.currentIdToken !== undefined}
+{#if data.currentIdToken !== undefined}
+	<p>
 		<code>{JSON.stringify(data.currentUser)}</code>
 		<button onclick={signOut} disabled={data.currentUser === undefined}>Logout</button>
+	</p>
+	{#if data.currentUser?.email_verified === false}
+		<p style="color: red;">
+			Your email address is not verified yet. <button onclick={() => _sendEmailVerification()}
+				>Resend verification email.</button
+			>
+		</p>
 	{/if}
-</p>
+{/if}
 
 {@render children()}

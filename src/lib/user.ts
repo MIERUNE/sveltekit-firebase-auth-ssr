@@ -5,4 +5,5 @@ export type PublicUserInfo = {
 export type BasicPrivateUserInfo = {
 	name: string;
 	email?: string;
+	email_verified?: boolean;
 } & PublicUserInfo;

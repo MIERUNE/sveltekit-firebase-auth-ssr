@@ -5,7 +5,8 @@ export const load = async ({ locals, depends }) => {
 		currentIdToken: locals.currentIdToken,
 		currentUser: locals.currentIdToken && {
 			uid: locals.currentIdToken.uid,
-			email: locals.currentIdToken.email
+			email: locals.currentIdToken.email,
+			email_verified: locals.currentIdToken.email_verified
 		}
 	};
 };
