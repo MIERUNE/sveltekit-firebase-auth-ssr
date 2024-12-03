@@ -7,15 +7,14 @@ import {
 	signInWithPopup,
 	signInWithRedirect,
 	getRedirectResult,
+	signInWithEmailAndPassword as _signInWithEmailAndPassword,
+	createUserWithEmailAndPassword as _createUserWithEmailAndPassword,
 	connectAuthEmulator,
 	type UserCredential,
 	type AuthProvider
 } from 'firebase/auth';
 import { invalidate } from '$app/navigation';
 import { getApp } from 'firebase/app';
-
-/** re-export the official firebase/auth for convenience */
-export * from 'firebase/auth';
 
 let redirectResultPromise: Promise<UserCredential | null>;
 
@@ -33,7 +32,7 @@ export function setupAuthClient(options: { emulatorHost?: string }) {
 	// Update the session cookie when the idToken changes
 	auth.onIdTokenChanged(async (user) => {
 		if (user) {
-			updateSession(await user.getIdToken());
+			updateSession(await user.getIdToken(true));
 		}
 	});
 }
@@ -61,6 +60,33 @@ export async function signInWithTwitter() {
 	await signInWithProvider(provider);
 }
 
+// export async function refreshSession() {
+// 	const auth = getAuth();
+// 	await auth.authStateReady();
+// 	if (auth.currentUser) {
+// 		const idToken = await auth.currentUser.getIdToken(true);
+// 		console.log(auth.currentUser.emailVerified, idToken);
+// 		await updateSession(idToken);
+// 		invalidate('auth:session');
+// 	}
+// }
+
+export async function signInWithEmailAndPassword(email: string, password: string) {
+	const auth = getAuth();
+	const cred = await _signInWithEmailAndPassword(auth, email, password);
+	await updateSession(await cred.user.getIdToken());
+	invalidate('auth:session');
+	return cred;
+}
+
+export async function createUserWithEmailAndPassword(email: string, password: string) {
+	const auth = getAuth();
+	const cred = await _createUserWithEmailAndPassword(auth, email, password);
+	await updateSession(await cred.user.getIdToken());
+	invalidate('auth:session');
+	return cred;
+}
+
 export async function signInWithProvider(provider: AuthProvider, withRedirect = true) {
 	const auth = getAuth();
 	const app = getApp();
@@ -80,14 +106,14 @@ export async function signInWithProvider(provider: AuthProvider, withRedirect = 
  */
 export async function signOut() {
 	await updateSession(undefined);
-	invalidate('auth:session');
 	await getAuth().signOut();
+	invalidate('auth:session');
 	resetRedirectResultHandler();
 }
 
 let previousIdToken: string | undefined = undefined;
 
-async function updateSession(idToken: string | undefined) {
+export async function updateSession(idToken: string | undefined) {
 	if (idToken === previousIdToken) {
 		return;
 	}
@@ -96,6 +122,9 @@ async function updateSession(idToken: string | undefined) {
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ idToken })
 	});
+	if (previousIdToken) {
+		invalidate('auth:session');
+	}
 	previousIdToken = idToken;
 }
 
