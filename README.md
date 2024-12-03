@@ -23,11 +23,11 @@ npm install -D @mierune/sveltekit-firebase-auth-ssr
    - API Key of the Firebase project
    - Firebase Service Account Key (from Google Cloud)
 2. **Add the necessary code to the following files**:
-   - `src/hooks.client.ts` (Example: TODO)
-   - `src/hooks.server.ts` (Example: TODO)
-   - `src/app.d.ts` (Example: TODO)
-   - `src/routes/+layout.server.ts` (Example: TODO)
-3. **Implement sign-in and sign-out functionality** in your application. (Example: TODO)
+   - `src/hooks.client.ts` ([Example](./src/hooks.client.ts))
+   - `src/hooks.server.ts` ([Example](./src/hooks.server.ts))
+   - `src/app.d.ts` ([Example](./src/app.d.ts))
+   - `src/routes/+layout.server.ts` ([Example](./src/routes/+layout.server.ts))
+3. **Implement sign-in and sign-out functionality** in your application. ([Example](./src/routes/login/+page.svelte))
 4. Use the user information and implement database integration if needed.
 5. Ensure that the required environment variables are set in the execution environment.
 

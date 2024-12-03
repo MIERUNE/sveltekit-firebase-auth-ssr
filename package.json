@@ -1,6 +1,6 @@
 {
 	"name": "@mierune/sveltekit-firebase-auth-ssr",
-	"version": "0.0.21",
+	"version": "0.0.22",
 	"repository": {
 		"url": "https://github.com/MIERUNE/sveltekit-firebase-auth-ssr"
 	},

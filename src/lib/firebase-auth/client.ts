@@ -13,8 +13,8 @@ import {
 	type UserCredential,
 	type AuthProvider
 } from 'firebase/auth';
-import { invalidate } from '$app/navigation';
 import { getApp } from 'firebase/app';
+import { invalidate } from '$app/navigation';
 
 let redirectResultPromise: Promise<UserCredential | null>;
 
