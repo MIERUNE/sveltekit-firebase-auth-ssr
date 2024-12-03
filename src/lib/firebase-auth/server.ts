@@ -12,9 +12,9 @@ import { env } from '$env/dynamic/public';
 
 export {
 	InMemoryStore,
-	type FirebaseIdToken,
 	ServiceAccountCredential,
-	WorkersKVStoreSingle
+	WorkersKVStoreSingle,
+	type FirebaseIdToken
 } from 'firebase-auth-cloudflare-workers-x509';
 
 export type AuthHandleOptions = {
