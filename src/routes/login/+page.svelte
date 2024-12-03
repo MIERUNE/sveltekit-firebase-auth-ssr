@@ -55,8 +55,7 @@
 			const auth = getAuth();
 			await sendSignInLinkToEmail(auth, email, {
 				url: $page.url.origin + '/login?email-link',
-				handleCodeInApp: true,
-				dynamicLinkDomain: $page.url.hostname
+				handleCodeInApp: true
 			});
 			window.localStorage.setItem('emailForSignIn', email);
 			alert("We've sent you an email with a link to sign in!");
