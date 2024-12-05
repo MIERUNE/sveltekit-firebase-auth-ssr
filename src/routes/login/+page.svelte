@@ -9,11 +9,12 @@
 		isSignInWithEmailLink
 	} from 'firebase/auth';
 	import {
-		signInWithGoogle,
 		waitForRedirectResult,
 		signInWithEmailAndPassword,
-		createUserWithEmailAndPassword
+		createUserWithEmailAndPassword,
+		signInWithProvider
 	} from '$lib/firebase-auth/client';
+	import { GoogleAuthProvider } from 'firebase/auth';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 
@@ -105,8 +106,9 @@
 		{/if}
 
 		Single Sign-On:
-		<button onclick={signInWithGoogle} disabled={data.currentIdToken !== undefined}
-			>Sign-in with Google</button
+		<button
+			onclick={() => signInWithProvider(new GoogleAuthProvider())}
+			disabled={data.currentIdToken !== undefined}>Sign-in with Google</button
 		>
 		<hr />
 		<div>

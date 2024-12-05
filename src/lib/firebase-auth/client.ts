@@ -1,9 +1,6 @@
-// Firebase Authentication for client-side
+// Firebase Authentication for the client-side of SvelteKit
 
 import {
-	FacebookAuthProvider,
-	GoogleAuthProvider,
-	TwitterAuthProvider,
 	getAuth,
 	signInWithPopup,
 	signInWithRedirect,
@@ -43,30 +40,6 @@ export function setupAuthClient(options: { emulatorHost?: string }) {
  */
 export async function waitForRedirectResult() {
 	return redirectResultPromise;
-}
-
-/**
- * Sign in with Google
- */
-export async function signInWithGoogle() {
-	const provider = new GoogleAuthProvider();
-	await signInWithProvider(provider);
-}
-
-/**
- * Sign in with Twitter
- */
-export async function signInWithTwitter() {
-	const provider = new TwitterAuthProvider();
-	await signInWithProvider(provider);
-}
-
-/**
- * Sign in with Facebook
- */
-export async function signInWithFacebook() {
-	const provider = new FacebookAuthProvider();
-	await signInWithProvider(provider);
 }
 
 export async function signInWithEmailAndPassword(email: string, password: string) {

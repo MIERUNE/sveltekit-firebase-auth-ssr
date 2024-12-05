@@ -1,4 +1,4 @@
-// Firebase Authentication for server-side
+// Firebase Authentication for the server-side of SvelteKit
 
 import {
 	Auth,
