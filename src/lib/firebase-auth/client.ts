@@ -1,6 +1,7 @@
 // Firebase Authentication for client-side
 
 import {
+	FacebookAuthProvider,
 	GoogleAuthProvider,
 	TwitterAuthProvider,
 	getAuth,
@@ -57,6 +58,14 @@ export async function signInWithGoogle() {
  */
 export async function signInWithTwitter() {
 	const provider = new TwitterAuthProvider();
+	await signInWithProvider(provider);
+}
+
+/**
+ * Sign in with Facebook
+ */
+export async function signInWithFacebook() {
+	const provider = new FacebookAuthProvider();
 	await signInWithProvider(provider);
 }
 
