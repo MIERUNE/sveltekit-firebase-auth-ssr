@@ -7,6 +7,6 @@ binding = "KV"
 id = "cc61b1444bc2402dada2541b9ae18c49"
 
 [vars]
-PUBLIC_FIREBASE_PROJECT_ID = "fukada-delete-me"
-PUBLIC_FIREBASE_API_KEY = "AIzaSyCqkxdTAOegNHszt2gHJp8Jkss2v9IZ71c"
+PUBLIC_FIREBASE_PROJECT_ID = "sveltekit-firebaseauth-ssr"
+PUBLIC_FIREBASE_API_KEY = "AIzaSyAszoTYS-QorJLFhXB6_d5iE83hScl2LjI"
 PUBLIC_FIREBASE_AUTH_EMULATOR_HOST = ""
