@@ -1,0 +1,27 @@
+name: Preview Release
+
+on:
+  pull_request:
+
+jobs:
+  preview-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm i -g --force corepack && corepack enable
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm package
+
+      - name: Publish packages preview with pkg-pr-new CLI
+        run: npx pkg-pr-new publish
