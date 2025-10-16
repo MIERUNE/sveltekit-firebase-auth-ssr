@@ -73,7 +73,7 @@ export async function signInWithProvider(provider: AuthProvider, withRedirect = 
  * Sign out
  */
 export async function signOut() {
-	await updateSession(undefined);
+	await updateSession(undefined, true);
 	await getAuth().signOut();
 	invalidate('auth:session');
 	resetRedirectResultHandler();
@@ -81,8 +81,11 @@ export async function signOut() {
 
 let previousIdToken: string | undefined = undefined;
 
-export async function updateSession(idToken: string | undefined) {
-	if (idToken === previousIdToken) {
+export async function updateSession(idToken: string | undefined, force?: boolean) {
+	// previousIdToken can be undefined. If this happens, the user cannot signOut()
+	// because updateSession(undefined) is always skipped here. In order to avoid
+	// this tragidy force parameter is provided.
+	if (!force && idToken === previousIdToken) {
 		return;
 	}
 	await fetch('/session', {
