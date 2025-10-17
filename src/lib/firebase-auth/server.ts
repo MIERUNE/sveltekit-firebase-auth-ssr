@@ -96,7 +96,7 @@ export function getAuth(projectId: string, keyStore: KeyStorer, credential?: Cre
 
 // ref: "Option 3: Proxy auth requests to firebaseapp.com"
 // https://firebase.google.com/docs/auth/web/redirect-best-practices#proxy-requests
-function proxyFirebaseAuthRequest(
+async function proxyFirebaseAuthRequest(
 	projectId: string,
 	request: Request,
 	fetch: typeof globalThis.fetch
@@ -105,8 +105,49 @@ function proxyFirebaseAuthRequest(
 	newUrl.protocol = 'https';
 	newUrl.host = `${projectId}.firebaseapp.com`;
 	newUrl.port = '';
-	const newRequest = new Request(newUrl.toString(), request);
-	return fetch(newRequest);
+
+	const hopByHopHeaders = [
+		'connection',
+		'keep-alive',
+		'proxy-authenticate',
+		'proxy-authorization',
+		'te',
+		'trailer',
+		'transfer-encoding',
+		'upgrade',
+	];
+
+	// Tweak request
+	const reqHeaders = new Headers(request.headers);
+	hopByHopHeaders.forEach((delKey) => {
+		reqHeaders.delete(delKey);
+	});
+	reqHeaders.set('Host', newUrl.host);
+
+	// Forward the request to the remote Firebase endpoint
+	const remoteReq = new Request(newUrl.toString(), {
+		method: request.method,
+		headers: reqHeaders,
+		body: request.body,
+		signal: request.signal,
+		duplex: request.body ? 'half' : undefined
+	} as RequestInit);
+	const remoteResp = await fetch(remoteReq);
+
+	// Tweak response
+	const responseBody = await remoteResp.blob();
+	const respHeaders = new Headers(remoteResp.headers);
+	hopByHopHeaders.forEach((delKey) => {
+		respHeaders.delete(delKey);
+	});
+	respHeaders.delete('content-length');
+	respHeaders.delete('content-encoding');
+
+	return new Response(responseBody, {
+		status: remoteResp.status,
+		statusText: remoteResp.statusText,
+		headers: respHeaders
+	});
 }
 
 /**
