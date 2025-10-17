@@ -107,31 +107,39 @@ async function proxyFirebaseAuthRequest(
 	newUrl.port = '';
 
 	const hopByHopHeaders = [
-    'connection', 
-    'keep-alive',
-    'transfer-encoding',
-    'te',
-    'upgrade',
-    'proxy-authorization',
-  ];
+		'connection',
+		'keep-alive',
+		'proxy-authenticate',
+		'proxy-authorization',
+		'te',
+		'trailer',
+		'transfer-encoding',
+		'upgrade',
+	];
 
 	// Tweak request
 	const reqHeaders = new Headers(request.headers);
-  hopByHopHeaders.forEach((delKey) => { reqHeaders.delete(delKey); });
-  reqHeaders.set('Host', newUrl.host);
+	hopByHopHeaders.forEach((delKey) => {
+		reqHeaders.delete(delKey);
+	});
+	reqHeaders.set('Host', newUrl.host);
 
 	// Forward the request to the remote Firebase endpoint
 	const remoteReq = new Request(newUrl.toString(), {
 		method: request.method,
 		headers: reqHeaders,
 		body: request.body,
-	});
+		signal: request.signal,
+		duplex: request.body ? 'half' : undefined
+	} as RequestInit);
 	const remoteResp = await fetch(remoteReq);
 
 	// Tweak response
 	const responseBody = await remoteResp.blob();
 	const respHeaders = new Headers(remoteResp.headers);
-  hopByHopHeaders.forEach((delKey) => { respHeaders.delete(delKey); });
+	hopByHopHeaders.forEach((delKey) => {
+		respHeaders.delete(delKey);
+	});
 	respHeaders.delete('content-length');
 	respHeaders.delete('content-encoding');
 
